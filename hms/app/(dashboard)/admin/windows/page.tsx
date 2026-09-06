@@ -95,7 +95,7 @@ export default function AdminWindowsPage() {
   };
 
   return (
-    <div className="container" style={{ padding: "2.5rem 1.5rem" }}>
+    <div style={{ width: "100%" }}>
       {/* Header */}
       <div
         style={{
@@ -108,10 +108,10 @@ export default function AdminWindowsPage() {
         }}
       >
         <div>
-          <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>
-            Admission <span className="text-gradient">Application Windows</span>
+          <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--text-primary)" }}>
+            Admission <span style={{ color: "var(--accent-blue)" }}>Application Windows</span>
           </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", marginTop: "0.25rem" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.925rem", marginTop: "0.25rem" }}>
             Configure time-limited student application forms targeted to specific hostels with rules and fee links.
           </p>
         </div>
@@ -143,14 +143,14 @@ export default function AdminWindowsPage() {
               <div key={win._id} className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
-                    <h3 style={{ fontSize: "1.2rem", fontWeight: 800 }}>{win.title}</h3>
+                    <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-primary)" }}>{win.title}</h3>
                     <div
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
                         gap: "0.4rem",
                         fontSize: "0.825rem",
-                        color: "#a5b4fc",
+                        color: "var(--accent-blue)",
                         marginTop: "0.25rem",
                         fontWeight: 600,
                       }}
@@ -170,17 +170,17 @@ export default function AdminWindowsPage() {
                 {/* Target Audience Remark Banner */}
                 <div
                   style={{
-                    background: "rgba(15, 23, 42, 0.7)",
-                    border: "1px solid var(--border-subtle)",
+                    background: "var(--badge-amber-bg)",
+                    border: "1px solid #fde68a",
                     borderRadius: "var(--radius-md)",
                     padding: "0.75rem 1rem",
                     fontSize: "0.85rem",
                   }}
                 >
-                  <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 700 }}>
+                  <div style={{ fontSize: "0.7rem", color: "var(--badge-amber-text)", textTransform: "uppercase", fontWeight: 700 }}>
                     Notice / Who this form is open for:
                   </div>
-                  <div style={{ color: "#fcd34d", fontWeight: 600, marginTop: "0.2rem" }}>
+                  <div style={{ color: "#92400e", fontWeight: 600, marginTop: "0.2rem" }}>
                     {win.targetRemark}
                   </div>
                 </div>

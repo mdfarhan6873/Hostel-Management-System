@@ -130,8 +130,8 @@ export default function ViewerDashboardPage() {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
             <thead>
-              <tr style={{ background: "rgba(15, 23, 42, 0.7)", textAlign: "left", borderBottom: "1px solid var(--border-subtle)" }}>
-                <th style={{ padding: "0.75rem 1rem" }}>Resident Name</th>
+              <tr style={{ background: "var(--bg-subtle)", textAlign: "left", borderBottom: "1px solid var(--border-subtle)" }}>
+                <th style={{ padding: "0.75rem 1rem", color: "var(--text-primary)", fontWeight: 600 }}>Resident Name</th>
                 <th style={{ padding: "0.75rem 1rem" }}>Assigned Room</th>
                 <th style={{ padding: "0.75rem 1rem" }}>Student Phone</th>
                 <th style={{ padding: "0.75rem 1rem" }}>Emergency Parent Phone</th>

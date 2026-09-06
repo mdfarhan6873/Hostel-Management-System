@@ -22,8 +22,12 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const pathname = usePathname();
 
-  if (!user && pathname === "/login") {
-    return null; // hide navbar on login page
+  if (pathname.startsWith("/admin")) {
+    return null; // Handled by AdminSidebar
+  }
+
+  if (pathname === "/login") {
+    return null; // Always hide navbar on login page
   }
 
   const isActive = (path: string) => {
@@ -35,12 +39,13 @@ export default function Navbar() {
   return (
     <header
       style={{
-        background: "rgba(15, 23, 42, 0.85)",
+        background: "var(--bg-secondary)",
         backdropFilter: "blur(12px)",
         borderBottom: "1px solid var(--border-subtle)",
         position: "sticky",
         top: 0,
         zIndex: 50,
+        boxShadow: "var(--shadow-sm)",
       }}
     >
       <div

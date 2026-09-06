@@ -40,13 +40,13 @@ export default function AdminLeavesPage() {
   }, [filter]);
 
   return (
-    <div className="container" style={{ padding: "2.5rem 1.5rem" }}>
+    <div style={{ width: "100%" }}>
       {/* Header */}
       <div style={{ marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>
-          Handwritten Leaves & <span className="text-gradient">Parent Verification</span>
+        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--text-primary)" }}>
+          Handwritten Leaves & <span style={{ color: "var(--accent-blue)" }}>Parent Verification</span>
         </h1>
-        <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", marginTop: "0.25rem" }}>
+        <p style={{ color: "var(--text-secondary)", fontSize: "0.925rem", marginTop: "0.25rem" }}>
           Inspect student handwritten leave applications, call registered parents to verify consent, and record authorization logs.
         </p>
       </div>
@@ -89,9 +89,9 @@ export default function AdminLeavesPage() {
                 {/* Header */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
-                    <h3 style={{ fontSize: "1.15rem", fontWeight: 800 }}>{leave.studentName}</h3>
+                    <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text-primary)" }}>{leave.studentName}</h3>
                     <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                      Roll: <strong style={{ color: "#f8fafc" }}>{leave.studentRollNumber}</strong> • Room {leave.roomNumber}
+                      Roll: <strong style={{ color: "var(--text-primary)" }}>{leave.studentRollNumber}</strong> • Room {leave.roomNumber}
                     </div>
                   </div>
 
@@ -108,7 +108,7 @@ export default function AdminLeavesPage() {
                 {/* Details */}
                 <div
                   style={{
-                    background: "rgba(15, 23, 42, 0.6)",
+                    background: "var(--bg-subtle)",
                     border: "1px solid var(--border-subtle)",
                     borderRadius: "var(--radius-md)",
                     padding: "0.85rem 1rem",
@@ -117,12 +117,12 @@ export default function AdminLeavesPage() {
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
                     <span style={{ color: "var(--text-muted)" }}>Period:</span>
-                    <strong>
+                    <strong style={{ color: "var(--text-primary)" }}>
                       {leave.startDate} to {leave.endDate} ({leave.totalDays} Days)
                     </strong>
                   </div>
                   <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", textTransform: "uppercase" }}>Reason:</div>
-                  <div style={{ color: "#f8fafc", fontStyle: "italic", marginTop: "0.15rem" }}>"{leave.reason}"</div>
+                  <div style={{ color: "var(--text-primary)", fontStyle: "italic", marginTop: "0.15rem" }}>"{leave.reason}"</div>
                 </div>
 
                 {/* Handwritten Document Link */}
@@ -142,19 +142,19 @@ export default function AdminLeavesPage() {
                 {leave.parentVerification?.calledAt ? (
                   <div
                     style={{
-                      background: "rgba(16, 185, 129, 0.08)",
-                      border: "1px solid rgba(16, 185, 129, 0.25)",
+                      background: "var(--badge-green-bg)",
+                      border: "1px solid #bbf7d0",
                       borderRadius: "var(--radius-md)",
                       padding: "0.75rem",
                       fontSize: "0.775rem",
-                      color: "#6ee7b7",
+                      color: "var(--badge-green-text)",
                     }}
                   >
                     <div style={{ fontWeight: 700, display: "flex", alignItems: "center", gap: "0.35rem" }}>
                       <ShieldCheck size={14} /> Parent Phone Verification Confirmed
                     </div>
                     <div style={{ marginTop: "0.2rem", color: "var(--text-secondary)" }}>
-                      Spoke with: <strong>{leave.parentVerification.spokenWith}</strong> at{" "}
+                      Spoke with: <strong style={{ color: "var(--text-primary)" }}>{leave.parentVerification.spokenWith}</strong> at{" "}
                       {new Date(leave.parentVerification.calledAt).toLocaleString()}
                     </div>
                     {leave.parentVerification.adminNotes && (

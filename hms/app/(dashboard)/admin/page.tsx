@@ -117,7 +117,7 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="container" style={{ padding: "2.5rem 1.5rem" }}>
+    <div style={{ width: "100%" }}>
       {/* Top Banner */}
       <div
         style={{
@@ -130,24 +130,27 @@ export default function AdminDashboardPage() {
         }}
       >
         <div>
-          <h1 style={{ fontSize: "2rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-            Hostel Capacity & <span className="text-gradient">Allotment Matrix</span>
+          <h1 style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
+            Hostel Capacity & Allotment Matrix
           </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", marginTop: "0.25rem" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginTop: "0.25rem" }}>
             Interactive real-time floor plan showing room capacities and 1-click bed allocation.
           </p>
         </div>
 
-        <div style={{ display: "flex", gap: "0.75rem" }}>
+        <div style={{ display: "flex", gap: "0.6rem" }}>
           <button
             type="button"
-            className="btn btn-secondary"
+            className="btn btn-secondary btn-sm"
             onClick={() => setShowAddRoomModal(true)}
           >
-            <PlusCircle size={17} /> Add Room
+            <PlusCircle size={15} /> Add Room
           </button>
-          <a href="/admin/applications" className="btn btn-primary">
-            Review Applications <ArrowRight size={17} />
+          <a href="/admin/attendance" className="btn btn-secondary btn-sm">
+            Daily Attendance
+          </a>
+          <a href="/admin/applications" className="btn btn-primary btn-sm">
+            Review Applications <ArrowRight size={15} />
           </a>
         </div>
       </div>
@@ -157,53 +160,47 @@ export default function AdminDashboardPage() {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "1.25rem",
-          marginBottom: "2.5rem",
+          gap: "1rem",
+          marginBottom: "2rem",
         }}
       >
-        <div className="glass-card" style={{ borderLeft: "4px solid var(--accent-primary)" }}>
-          <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 700 }}>
-            Total Campus Capacity
+        <div className="kpi-card">
+          <div className="kpi-icon" style={{ backgroundColor: "#f1f5f9", color: "#0f172a" }}>
+            <Building2 size={22} />
           </div>
-          <div style={{ fontSize: "2.25rem", fontWeight: 800, marginTop: "0.25rem" }}>{totalSystemBeds}</div>
-          <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
-            Total residential beds modeled
-          </div>
-        </div>
-
-        <div className="glass-card" style={{ borderLeft: "4px solid #6366f1" }}>
-          <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 700 }}>
-            Occupied Beds
-          </div>
-          <div style={{ fontSize: "2.25rem", fontWeight: 800, color: "#a5b4fc", marginTop: "0.25rem" }}>
-            {totalSystemOccupied}
-          </div>
-          <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
-            Currently assigned students
+          <div>
+            <div className="kpi-value">{totalSystemBeds}</div>
+            <div className="kpi-label">Total Campus Beds</div>
           </div>
         </div>
 
-        <div className="glass-card" style={{ borderLeft: "4px solid #10b981" }}>
-          <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 700 }}>
-            Available / Vacant Beds
+        <div className="kpi-card">
+          <div className="kpi-icon" style={{ backgroundColor: "#dbeafe", color: "#2563eb" }}>
+            <Users size={22} />
           </div>
-          <div style={{ fontSize: "2.25rem", fontWeight: 800, color: "#34d399", marginTop: "0.25rem" }}>
-            {totalSystemVacant}
-          </div>
-          <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
-            Ready for instant 1-click allotment
+          <div>
+            <div className="kpi-value" style={{ color: "#2563eb" }}>{totalSystemOccupied}</div>
+            <div className="kpi-label">Occupied Beds</div>
           </div>
         </div>
 
-        <div className="glass-card" style={{ borderLeft: "4px solid #06b6d4" }}>
-          <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 700 }}>
-            Occupancy Rate
+        <div className="kpi-card">
+          <div className="kpi-icon" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>
+            <Bed size={22} />
           </div>
-          <div style={{ fontSize: "2.25rem", fontWeight: 800, color: "#38bdf8", marginTop: "0.25rem" }}>
-            {overallOccupancy}%
+          <div>
+            <div className="kpi-value" style={{ color: "#16a34a" }}>{totalSystemVacant}</div>
+            <div className="kpi-label">Vacant Available Beds</div>
           </div>
-          <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
-            System-wide residency load
+        </div>
+
+        <div className="kpi-card">
+          <div className="kpi-icon" style={{ backgroundColor: "#fef3c7", color: "#d97706" }}>
+            <TrendingUp size={22} />
+          </div>
+          <div>
+            <div className="kpi-value" style={{ color: "#d97706" }}>{overallOccupancy}%</div>
+            <div className="kpi-label">Residency Load</div>
           </div>
         </div>
       </div>
@@ -252,15 +249,15 @@ export default function AdminDashboardPage() {
               justifyContent: "space-between",
               alignItems: "center",
               marginBottom: "2rem",
-              background: "rgba(15, 23, 42, 0.6)",
+              background: "var(--bg-secondary)",
             }}
           >
             <div>
-              <h2 style={{ fontSize: "1.35rem", fontWeight: 800 }}>
+              <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "var(--text-primary)" }}>
                 {currentHostel.name} ({currentBlock?.name || currentHostel.code})
               </h2>
               <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.2rem" }}>
-                Warden: <strong style={{ color: "#f8fafc" }}>{currentHostel.wardenName || "Dr. Sunita Deshmukh"}</strong> • Contact: {currentHostel.wardenContact || "9876543299"}
+                Warden: <strong style={{ color: "var(--text-primary)" }}>{currentHostel.wardenName || "Dr. Sunita Deshmukh"}</strong> • Contact: {currentHostel.wardenContact || "9876543299"}
               </div>
             </div>
 

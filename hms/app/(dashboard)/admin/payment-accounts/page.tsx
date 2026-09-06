@@ -92,7 +92,7 @@ export default function AdminPaymentAccountsPage() {
   };
 
   return (
-    <div className="container" style={{ padding: "2.5rem 1.5rem" }}>
+    <div style={{ width: "100%" }}>
       {/* Header */}
       <div
         style={{
@@ -105,10 +105,10 @@ export default function AdminPaymentAccountsPage() {
         }}
       >
         <div>
-          <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>
-            Official <span className="text-gradient">UPI Payment Accounts & QR</span>
+          <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--text-primary)" }}>
+            Official <span style={{ color: "var(--accent-blue)" }}>UPI Payment Accounts & QR</span>
           </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", marginTop: "0.25rem" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.925rem", marginTop: "0.25rem" }}>
             Configure designated UPI IDs and QR codes for hostel rent, mess fees, and security deposit collections.
           </p>
         </div>
@@ -137,8 +137,8 @@ export default function AdminPaymentAccountsPage() {
             <div key={acc._id} className="glass-card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
-                  <h3 style={{ fontSize: "1.2rem", fontWeight: 800 }}>{acc.title}</h3>
-                  <div style={{ fontSize: "0.85rem", color: "#a5b4fc", fontWeight: 600 }}>{acc.payeeName}</div>
+                  <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-primary)" }}>{acc.title}</h3>
+                  <div style={{ fontSize: "0.85rem", color: "var(--accent-blue)", fontWeight: 600 }}>{acc.payeeName}</div>
                 </div>
 
                 {acc.isDefault && (
@@ -151,7 +151,7 @@ export default function AdminPaymentAccountsPage() {
               {/* UPI ID Banner */}
               <div
                 style={{
-                  background: "rgba(15, 23, 42, 0.7)",
+                  background: "var(--bg-subtle)",
                   border: "1px solid var(--border-subtle)",
                   borderRadius: "var(--radius-md)",
                   padding: "0.85rem 1rem",
@@ -160,7 +160,7 @@ export default function AdminPaymentAccountsPage() {
                 <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 700 }}>
                   Official UPI ID
                 </div>
-                <div style={{ fontSize: "1.05rem", fontWeight: 800, color: "#f8fafc", fontFamily: "var(--font-mono)", marginTop: "0.2rem" }}>
+                <div style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", fontFamily: "var(--font-mono)", marginTop: "0.2rem" }}>
                   {acc.upiId}
                 </div>
               </div>

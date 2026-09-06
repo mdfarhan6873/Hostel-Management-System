@@ -177,7 +177,7 @@ export default function AdminBillingPage() {
   const selectedUpiAccountObj = upiAccounts.find((a) => a._id === selectedUpiId);
 
   return (
-    <div className="container" style={{ padding: "2.5rem 1.5rem" }}>
+    <div style={{ width: "100%" }}>
       {/* Header */}
       <div
         style={{
@@ -190,10 +190,10 @@ export default function AdminBillingPage() {
         }}
       >
         <div>
-          <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>
-            Billing & <span className="text-gradient">Fee Management</span>
+          <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--text-primary)" }}>
+            Billing & <span style={{ color: "var(--accent-blue)" }}>Fee Management</span>
           </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", marginTop: "0.25rem" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.925rem", marginTop: "0.25rem" }}>
             Generate 6-month hostel & mess bills, apply leave rebates, and assign designated UPI QR payment accounts.
           </p>
         </div>
@@ -220,13 +220,13 @@ export default function AdminBillingPage() {
         <div className="glass-card" style={{ padding: 0, overflow: "hidden" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
             <thead>
-              <tr style={{ background: "rgba(15, 23, 42, 0.7)", textAlign: "left", borderBottom: "1px solid var(--border-subtle)" }}>
-                <th style={{ padding: "1rem" }}>Bill Number</th>
-                <th style={{ padding: "1rem" }}>Student</th>
-                <th style={{ padding: "1rem" }}>Designated UPI QR</th>
-                <th style={{ padding: "1rem" }}>Amount & Rebate</th>
-                <th style={{ padding: "1rem" }}>Status</th>
-                <th style={{ padding: "1rem", textAlign: "right" }}>Receipt</th>
+              <tr style={{ background: "var(--bg-subtle)", textAlign: "left", borderBottom: "1px solid var(--border-subtle)" }}>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Bill Number</th>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Student</th>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Designated UPI QR</th>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Amount & Rebate</th>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Status</th>
+                <th style={{ padding: "1rem", textAlign: "right", color: "var(--text-primary)", fontWeight: 600 }}>Receipt</th>
               </tr>
             </thead>
             <tbody>
@@ -236,7 +236,7 @@ export default function AdminBillingPage() {
                 return (
                   <tr key={bill._id} style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                     <td style={{ padding: "1rem" }}>
-                      <div style={{ fontWeight: 700, color: "#f8fafc" }}>{bill.billNumber}</div>
+                      <div style={{ fontWeight: 700, color: "var(--text-primary)" }}>{bill.billNumber}</div>
                       <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.15rem" }}>
                         Due: {new Date(bill.dueDate).toLocaleDateString()}
                       </div>
@@ -467,7 +467,7 @@ export default function AdminBillingPage() {
                         gridTemplateColumns: "2fr 1fr 1fr auto",
                         gap: "0.5rem",
                         alignItems: "center",
-                        background: "rgba(15, 23, 42, 0.5)",
+                        background: "var(--bg-subtle)",
                         padding: "0.5rem 0.75rem",
                         borderRadius: "var(--radius-md)",
                         border: "1px solid var(--border-subtle)",

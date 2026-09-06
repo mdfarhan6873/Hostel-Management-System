@@ -133,13 +133,13 @@ export default function AdminApplicationsPage() {
   };
 
   return (
-    <div className="container" style={{ padding: "2.5rem 1.5rem" }}>
+    <div style={{ width: "100%" }}>
       {/* Header */}
       <div style={{ marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>
-          Student <span className="text-gradient">Hostel Applications</span>
+        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--text-primary)" }}>
+          Student <span style={{ color: "var(--accent-blue)" }}>Hostel Applications</span>
         </h1>
-        <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", marginTop: "0.25rem" }}>
+        <p style={{ color: "var(--text-secondary)", fontSize: "0.925rem", marginTop: "0.25rem" }}>
           Verify submitted student documents, mark eligibility, trigger visual room allotment, or manage cancellations.
         </p>
       </div>
@@ -207,12 +207,12 @@ export default function AdminApplicationsPage() {
         <div className="glass-card" style={{ padding: "0", overflow: "hidden" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
             <thead>
-              <tr style={{ background: "rgba(15, 23, 42, 0.7)", textAlign: "left", borderBottom: "1px solid var(--border-subtle)" }}>
-                <th style={{ padding: "1rem" }}>Applicant</th>
-                <th style={{ padding: "1rem" }}>Hostel & Branch</th>
-                <th style={{ padding: "1rem" }}>Academics</th>
-                <th style={{ padding: "1rem" }}>Status</th>
-                <th style={{ padding: "1rem", textAlign: "right" }}>Actions</th>
+              <tr style={{ background: "var(--bg-subtle)", textAlign: "left", borderBottom: "1px solid var(--border-subtle)" }}>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Applicant</th>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Hostel & Branch</th>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Academics</th>
+                <th style={{ padding: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>Status</th>
+                <th style={{ padding: "1rem", textAlign: "right", color: "var(--text-primary)", fontWeight: 600 }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -363,7 +363,7 @@ export default function AdminApplicationsPage() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", fontSize: "0.85rem" }}>
               <div>
                 <span style={{ color: "var(--text-muted)" }}>Roll Number:</span>{" "}
-                <strong style={{ color: "#fff" }}>{inspectApp.rollNumber}</strong>
+                <strong style={{ color: "var(--text-primary)" }}>{inspectApp.rollNumber}</strong>
               </div>
               <div>
                 <span style={{ color: "var(--text-muted)" }}>Registration No:</span>{" "}
@@ -437,7 +437,7 @@ export default function AdminApplicationsPage() {
               <ShieldAlert size={22} /> Cancel Allotment / Eviction
             </h2>
             <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", marginTop: "0.35rem", marginBottom: "1.25rem" }}>
-              You are revoking the hostel room allotment for <strong style={{ color: "#fff" }}>{cancelTarget.name}</strong> ({cancelTarget.rollNumber}).
+              You are revoking the hostel room allotment for <strong style={{ color: "var(--text-primary)" }}>{cancelTarget.name}</strong> ({cancelTarget.rollNumber}).
             </p>
 
             <form onSubmit={handleCancelAllotmentSubmit}>
