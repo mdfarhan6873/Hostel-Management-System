@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Next.js Build Output
+.next/
+**/.next/
+out/
+**/out/
+
+# Environment Variables & Secrets (Keep confidential!)
+.env
+.env*.local
+*.env
+**/.env
+**/.env*.local
+
+# Debug & Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
