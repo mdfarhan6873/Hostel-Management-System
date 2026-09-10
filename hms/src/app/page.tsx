@@ -527,12 +527,20 @@ export default function HomePage() {
       </header>
 
       {/* 3. HERO SECTION (BIG BACKGROUND IMAGE + NOTICE BOARD + COMPACT LOGIN CARD) */}
-      <main
-        className="relative flex-1 flex items-center py-6 sm:py-8 lg:py-10 bg-cover bg-center"
-        style={{ backgroundImage: "url('/landing_page_image.png')" }}
-      >
+      <main className="relative flex-1 flex items-center py-6 sm:py-8 lg:py-10 bg-slate-950 overflow-hidden">
+        {/* Optimized Background Image (WebP ~220KB, High Priority, Instant Load) */}
+        <div className="absolute inset-0 -z-0 overflow-hidden">
+          <img
+            src="/landing_page_image.webp"
+            alt="GEC Munger Campus"
+            fetchPriority="high"
+            decoding="sync"
+            className="w-full h-full object-cover object-center pointer-events-none transform scale-100"
+          />
+        </div>
+
         {/* Backdrop Overlay for contrast and institutional feel */}
-        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]"></div>
+        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px] z-0"></div>
 
         <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
@@ -677,11 +685,12 @@ export default function HomePage() {
               {/* Student Resident Community Preview (Photo Integration) */}
               <div className="bg-slate-900/80 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-3.5 border border-slate-700/80 flex items-center gap-3.5 text-white shadow-lg">
                 <img
-                  src="/Campus_live_1.png"
+                  src="/Campus_live_1.webp"
                   alt="GEC Munger Hostel Students"
+                  loading="lazy"
                   className="w-20 h-16 sm:w-24 sm:h-18 object-cover rounded-xl border border-slate-600 shadow-md flex-shrink-0"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "/logo.webp";
+                    (e.target as HTMLImageElement).src = "/Campus_live_1.png";
                   }}
                 />
                 <div>
