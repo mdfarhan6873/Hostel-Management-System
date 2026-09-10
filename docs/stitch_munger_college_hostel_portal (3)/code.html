@@ -1,0 +1,354 @@
+<!DOCTYPE html><html lang="hi" style=""><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>राजकीय अभियंत्रण महाविद्यालय, मुंगेर - Hostel Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Noto+Sans+Devanagari:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .gov-pattern {
+      background-color: #0b1f3a;
+      background-image: radial-gradient(#1e3a8a 0.75px, transparent 0.75px), radial-gradient(#1e3a8a 0.75px, #0b1f3a 0.75px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, rgba(8, 24, 48, 0.92) 0%, rgba(15, 39, 74, 0.88) 60%, rgba(26, 54, 93, 0.82) 100%);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+    }
+    .marquee-container {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-text {
+      display: inline-block;
+      animation: marquee 26s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translate3d(100%, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- 1. TOP UTILITY BAR -->
+  <div class="bg-[#991b1b] text-white text-xs sm:text-sm font-medium border-b border-red-900 shadow-sm relative z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex flex-wrap items-center justify-between gap-2">
+      <!-- Left: Rules & Regulations & Quick Links -->
+      <div class="flex items-center space-x-4">
+        <a href="#rules-modal" class="inline-flex items-center hover:text-amber-200 transition-colors font-semibold group">
+          <i class="fa-solid fa-book-bookmark mr-1.5 text-amber-300 group-hover:scale-110 transition-transform"></i>
+          <span class="">Rules &amp; Regulations / नियम एवं विनियम</span>
+        </a>
+        <span class="text-red-300 hidden md:inline">|</span>
+        <a href="#fee-structure" class="hover:text-amber-200 transition-colors hidden md:inline-flex items-center">
+          <i class="fa-solid fa-file-invoice-dollar mr-1 text-red-200"></i> Fee Structure
+        </a>
+        <span class="text-red-300 hidden lg:inline">|</span>
+        <span class="text-red-100 hidden lg:inline-flex items-center">
+          <i class="fa-solid fa-shield-halved mr-1 text-emerald-300"></i> बिहार सरकार / Govt. of Bihar Approved
+        </span>
+      </div>
+
+      <!-- Right: Language Dropdown & Accessibility -->
+      <div class="flex items-center space-x-3 ml-auto">
+        <div class="hidden sm:flex items-center space-x-1 text-xs border-r border-red-700 pr-3 mr-1 text-red-200">
+          <span class="cursor-pointer hover:text-white px-1">A-</span>
+          <span class="cursor-pointer hover:text-white px-1 font-bold">A</span>
+          <span class="cursor-pointer hover:text-white px-1 font-bold">A+</span>
+        </div>
+        
+        <div class="flex items-center space-x-1.5 bg-red-950/60 px-2.5 py-1 rounded border border-red-700/60">
+          <i class="fa-solid fa-globe text-amber-300 text-xs"></i>
+          <label for="lang-select" class="sr-only">भाषा चुनें</label>
+          <select id="lang-select" class="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer">
+            <option value="hi" class="text-slate-900" selected="">हिंदी (Hindi)</option>
+            <option value="en" class="text-slate-900">English</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MAIN HEADER (Logo, College Name, Software Designation, Contact) -->
+  <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        
+        <!-- Left: Emblem + College Identity + Software Badge -->
+        <div class="flex items-center space-x-3.5 sm:space-x-4">
+          <div class="flex-shrink-0 bg-white p-1 rounded-full border-2 border-amber-500 shadow-sm">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3EgkT11qK33_d3P4nUdLEzt7x0KxRgLz64bAswxSAVT6LSCC9yZ6nLzeegQiqQ6Dqic82U5JZXWfvEogs3g3NrxupO7ZJDgHBIuy0pc49r7z5X52zLPD50pfQnwtdDSaoiCJF13gYDvDQvb-akyT-8IKQjOhqaaI9TWa3xnNTx2-dcpd4g1sw3xHw-VL5OubgTxnsrcOjQp7MtXVNZXJ6b48uD7thT_okt2XXEKTgsstLvty3SK0U7QiocWTX5iaLq3o" alt="GEC Munger Logo" class="h-16 w-16 sm:h-20 sm:w-20 object-contain">
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="inline-block bg-blue-100 text-blue-800 text-[11px] font-bold px-2 py-0.5 rounded tracking-wide uppercase border border-blue-200">DSTTE, Govt. of Bihar</span>
+              <span class="inline-block bg-emerald-100 text-emerald-800 text-[11px] font-semibold px-2 py-0.5 rounded border border-emerald-200">Estd. 2019</span>
+            </div>
+            <h1 class="text-lg sm:text-2xl font-extrabold text-[#0f2942] tracking-tight leading-tight mt-0.5">
+              राजकीय अभियंत्रण महाविद्यालय, मुंगेर
+            </h1>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600">
+              Government Engineering College, Munger
+            </p>
+            <div class="flex items-center mt-1 space-x-2">
+              <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+              <span class="text-xs font-bold text-red-700 uppercase tracking-wider bg-red-50 px-2 py-0.5 rounded border border-red-200">
+                छात्रावास प्रबंधन प्रणाली (Hostel Management System - HMS)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Contact with 10am - 5pm, email, phone -->
+        <div class="flex items-center justify-start md:justify-end"><div class="flex items-center space-x-3 text-left py-1">
+  <div class="h-10 w-10 rounded-xl bg-blue-900 text-amber-400 flex items-center justify-center text-lg flex-shrink-0">
+    <i class="fa-solid fa-headset"></i>
+  </div>
+  <div class="flex flex-col space-y-1 text-xs">
+    <div class="flex items-center space-x-1.5 text-slate-600">
+      <i class="fa-regular fa-clock text-amber-600 text-[11px]"></i>
+      <span class="font-bold text-slate-800">10:00 AM – 5:00 PM</span>
+      <span class="text-[11px] text-slate-500 font-medium">(कार्य दिवस / Working Days)</span>
+    </div>
+    <div class="flex items-center">
+      <a href="tel:+916344299901" class="font-semibold text-slate-700 hover:text-blue-700 flex items-center transition-colors">
+        <i class="fa-solid fa-phone text-emerald-600 mr-1.5 text-[11px]"></i> +91 6344 299901
+      </a>
+    </div>
+    <div class="flex items-center">
+      <a href="mailto:hostel.gecmunger@gmail.com" class="font-semibold text-slate-700 hover:text-blue-700 flex items-center transition-colors">
+        <i class="fa-solid fa-envelope text-blue-600 mr-1.5 text-[11px]"></i> hostel.gecmunger@gmail.com
+      </a>
+    </div>
+  </div>
+</div></div>
+
+      </div>
+    </div>
+
+    <!-- Live Urgent Notification Strip -->
+    <div class="bg-amber-400 text-slate-950 px-4 py-1.5 border-t border-b border-amber-500 flex items-center text-xs font-semibold shadow-inner">
+      <div class="flex items-center bg-red-700 text-white px-2 py-0.5 rounded uppercase font-bold mr-3 flex-shrink-0 text-[11px]">
+        <i class="fa-solid fa-bullhorn mr-1.5 animate-bounce"></i> सूचना / Update
+      </div>
+      <div class="marquee-container flex-1">
+        <span class="marquee-text">
+          शैक्षणिक सत्र 2025-26 के प्रथम एवं द्वितीय वर्ष के छात्र/छात्राओं हेतु छात्रावास नामांकन खिड़की प्रारंभ हो चुकी है। आवेदन की अंतिम तिथि: 25 अगस्त 2026 तक। • Nightly roll-call selfie window is active between 7:00 PM to 8:00 PM daily. • Please keep parent contact and Aadhaar ready before applying.
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. HERO SECTION (BIG BACKGROUND IMAGE + LEFT NOTICE + RIGHT LOGIN) -->
+  <main class="relative flex-1 flex items-center py-8 lg:py-12 bg-cover bg-center" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuDYsWwyT1sqkzd67gCs2CYKf6Wkz3jbPHiP0jmAXuKtCD_zoi_zLmvwufRFCtMk024NMxF6dQ2ZX0QdPRNpgLY9pwJG43iyNLsW3IamoA9p6GwevDNlKmPtRYcsaqb3vliGLLGEEi9-XZAxOiahL22cz1QBYHX3lls_8YDpbM0VWQdDW3Ty33coqbIgIGD7u6fu2suSbIIo29hWV1hjY3faVbOh8l1UY9OC9VGlcOOYxWBEQjSp82jNt0f6q_UgFVn_R1E&quot;);">
+    <!-- Backdrop Overlay for contrast and institutional feel -->
+    <div class="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- ================= LEFT COLUMN: NOTICES & ANNOUNCEMENTS ================= -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Campus Banner Card -->
+          <div class="bg-slate-900/85 backdrop-blur-md border border-slate-700/80 rounded-2xl p-5 sm:p-6 text-white shadow-2xl">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold uppercase tracking-widest text-amber-400 flex items-center">
+                <i class="fa-solid fa-building-columns mr-1.5"></i> छात्र-छात्राओं हेतु आवासीय परिसर
+              </span>
+              <span class="bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 text-[11px] font-semibold px-2 py-0.5 rounded-full">
+                सत्र 2025–26 खुला है
+              </span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white mb-2">
+              डिजिटल हॉस्टल आवंटन, बायो-अटेंडेंस एवं छात्र सेवा पोर्टल
+            </h2>
+            <p class="text-sm text-slate-300 leading-relaxed">महाविद्यालय में अध्ययनरत विद्यार्थियों के लिए सुरक्षित, सुव्यवस्थित एवं डिजिटल छात्रावास प्रबंधन प्रणाली। पारदर्शी कमरा आवंटन, दैनिक 7-8 PM लोकेशन आधारित बायो-हाजिरी, एवं मेस सुविधा।</p>
+
+            <!-- Key Metric Pills -->
+            <div class="grid grid-cols-3 gap-2.5 mt-4 pt-4 border-t border-slate-800 text-center"><div class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50"><div class="text-base sm:text-xl font-extrabold text-amber-400">Boys &amp; Girls</div><div class="text-[11px] text-slate-400 font-medium">2 हॉस्टल श्रेणियां</div></div><div class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50"><div class="text-base sm:text-xl font-extrabold text-emerald-400">डिजिटल कक्ष आवंटन</div><div class="text-[11px] text-slate-400 font-medium">Bed, Room &amp; Furniture ID</div></div><div class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50"><div class="text-base sm:text-xl font-extrabold text-sky-400">7–8 PM हाजिरी</div><div class="text-[11px] text-slate-400 font-medium">लोकेशन आधारित बायो-हाजिरी</div></div></div>
+          </div>
+
+          <!-- NOTICE BOARD COMPONENT (Detailed Left Section) -->
+          <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-900 to-indigo-950 text-white px-5 py-3.5 flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <div class="h-7 w-7 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-sm">
+                  <i class="fa-solid fa-bullhorn"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-base tracking-tight leading-tight">सूचना पट्ट / Notice Board</h3>
+                  <p class="text-[11px] text-blue-200">नवीनतम दिशा-निर्देश एवं परिपत्र (Official Circulars)</p>
+                </div>
+              </div>
+              <a href="#all-notices" class="text-xs font-semibold text-amber-300 hover:text-amber-200 flex items-center">
+                सभी देखें <i class="fa-solid fa-arrow-right ml-1"></i>
+              </a>
+            </div>
+
+            <!-- Notice List -->
+            <div class="divide-y divide-slate-100 max-h-[320px] overflow-y-auto"><div class="p-4 hover:bg-blue-50/70 transition-colors flex items-start space-x-3.5 group"><div class="flex-shrink-0 text-center bg-red-100 text-red-800 rounded-lg p-1.5 w-12 border border-red-200"><span class="block text-[10px] font-extrabold uppercase">Aug</span><span class="block text-base font-black leading-none">18</span></div><div class="flex-1 min-w-0"><div class="flex items-center space-x-2"><span class="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.2 rounded uppercase">नामांकन</span><span class="text-xs font-semibold text-slate-500">Ref: GEC/HMS/2026/092</span></div><h4 class="text-sm font-bold text-slate-900 group-hover:text-blue-800 mt-1 leading-snug">सत्र 2025-26 छात्रावास प्रवेश प्रपत्र एवं सीट आवंटन</h4><p class="text-xs text-slate-600 mt-0.5 leading-relaxed">सत्र 2025-26 के चयनित छात्र-छात्राएं प्रवेश प्रपत्र, शपथ पत्र एवं आवश्यक दस्तावेज वार्डन कार्यालय में 25 अगस्त 2026 तक अनिवार्य रूप से जमा करें।</p><div class="flex flex-wrap items-center gap-2 mt-2 pt-1 border-t border-slate-100 text-xs font-semibold"><a href="#admission-form" class="inline-flex items-center text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded border border-blue-200 transition-colors"><i class="fa-solid fa-file-invoice-dollar mr-1 text-blue-600"></i> प्रवेश प्रपत्र (Admission Form PDF)</a><a href="#fee-structure" class="inline-flex items-center text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded border border-emerald-200 transition-colors"><i class="fa-solid fa-file-invoice-dollar mr-1 text-emerald-600"></i> शुल्क संरचना देखें (Fee Structure PDF)</a><a href="#rules-modal" class="inline-flex items-center text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded border border-slate-300 transition-colors"><i class="fa-solid fa-book-bookmark mr-1 text-amber-600"></i> नियम व विनियम (Rules &amp; Regulations)</a></div></div></div><div class="p-4 hover:bg-blue-50/70 transition-colors flex items-start space-x-3.5 group"><div class="flex-shrink-0 text-center bg-blue-100 text-blue-800 rounded-lg p-1.5 w-12 border border-blue-200"><span class="block text-[10px] font-extrabold uppercase">Aug</span><span class="block text-base font-black leading-none">15</span></div><div class="flex-1 min-w-0"><div class="flex items-center space-x-2"><span class="bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.2 rounded uppercase">Asset Blueprint</span><span class="text-xs font-semibold text-slate-500">Ref: GEC/HMS/2026/088</span></div><h4 class="text-sm font-bold text-slate-900 group-hover:text-blue-800 mt-1 leading-snug">कमरा एवं फर्नीचर ब्लूप्रिंट मैपिंग (Bed, Table &amp; Chair ID)</h4><p class="text-xs text-slate-600 mt-0.5 leading-relaxed">वार्डन डैशबोर्ड पर प्रत्येक कक्ष के लिए विशिष्ट परिसंपत्ति पहचान संख्या अंकित कर दी गई है। आवंटन सूची में अपना नाम व फर्नीचर आईडी सत्यापित करें।</p><div class="flex flex-wrap items-center gap-2 mt-2 pt-1 border-t border-slate-100 text-xs font-semibold"><a href="#blueprint-pdf" class="inline-flex items-center text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded border border-blue-200 transition-colors"><i class="fa-solid fa-file-invoice-dollar mr-1 text-blue-600"></i> आदेश पत्र डाउनलोड (Download Circular)</a><a href="#rules-modal" class="inline-flex items-center text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded border border-slate-300 transition-colors"><i class="fa-solid fa-book-bookmark mr-1 text-amber-600"></i> संपत्ति संरक्षण नियम (Asset Guidelines)</a></div></div></div><div class="p-4 hover:bg-blue-50/70 transition-colors flex items-start space-x-3.5 group"><div class="flex-shrink-0 text-center bg-emerald-100 text-emerald-800 rounded-lg p-1.5 w-12 border border-emerald-200"><span class="block text-[10px] font-extrabold uppercase">Aug</span><span class="block text-base font-black leading-none">10</span></div><div class="flex-1 min-w-0"><div class="flex items-center space-x-2"><span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.2 rounded uppercase">Mess Rebate</span><span class="text-xs font-semibold text-slate-500">Ref: GEC/HMS/2026/085</span></div><h4 class="text-sm font-bold text-slate-900 group-hover:text-blue-800 mt-1 leading-snug">मेस रिबेट एवं दैनिक उपस्थिति संबंधी दिशा-निर्देश</h4><p class="text-xs text-slate-600 mt-0.5 leading-relaxed">स्वीकृत अवकाश एवं दैनिक 7-8 PM बायो-अटेंडेंस सत्यापन के आधार पर मासिक मेस शुल्क में पारदर्शी छूट लागू करने हेतु नियम जारी किए गए हैं।</p><div class="flex flex-wrap items-center gap-2 mt-2 pt-1 border-t border-slate-100 text-xs font-semibold"><a href="#mess-rebate" class="inline-flex items-center text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded border border-emerald-200 transition-colors"><i class="fa-solid fa-utensils mr-1 text-emerald-600"></i> मेस रिबेट नियम (Mess Rebate Policy)</a><a href="#rebate-form" class="inline-flex items-center text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded border border-blue-200 transition-colors"><i class="fa-solid fa-file-invoice-dollar mr-1 text-blue-600"></i> रिबेट आवेदन फॉर्म (Rebate Application)</a></div></div></div></div>
+
+            <!-- Footer of Notice Card -->
+            <div class="bg-slate-50 px-4 py-2.5 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+              <span class="flex items-center text-slate-500"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> मुख्य वार्डन कार्यालय द्वारा सत्यापित</span>
+              <a href="#archive" class="font-semibold text-blue-800 hover:underline">पुराने सर्कुलर आर्काइव →</a>
+            </div>
+          </div>
+
+          <!-- Student Resident Community Preview (Photo Integration) -->
+          <div class="bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-slate-700/80 flex items-center gap-4 text-white">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA13WoOA9drghbfc9u1P8eUEgsY2w4bO74QODJIBa2DA7lYJrFK6sPK13aD5z4xmFNbG1J6o80DXFCqQks6xo_GT2MxI2HtSZe0BdKfEMOBlISr8Buv-2kTfw_0XkncD176NBKAOTZHIxFUhxgfbDwxfQxFDpUPHhTKqaBWaiBTxvf7BrMaLINk0MS4QrPr-rrlkHwlhGgqRu8XvzUp8VPQiiuw7dmTjHYdCl9pjFTqYIjABstXGZuxzGBTi7hnuqfBOHw" alt="GEC Munger Hostel Students" class="w-24 h-16 sm:w-32 sm:h-20 object-cover rounded-xl border border-slate-600 shadow-md">
+            <div>
+              <div class="text-xs font-bold text-amber-400 uppercase tracking-wide">जीवंत छात्र समुदाय / Vibrant Campus Life</div>
+              <div class="text-sm font-semibold text-slate-200 mt-0.5">जीईसी मुंगेर के छात्र-छात्राएं परिसर छात्रावासों में सुरक्षित एवं अनुशासित वातावरण में शिक्षा प्राप्त कर रहे हैं।</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ================= RIGHT COLUMN: UNIFIED SECURE LOGIN SECTION ================= -->
+        <div class="lg:col-span-5">
+          <div class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-2xl relative">
+            
+            <!-- Badge at top of Login Card -->
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
+              <div>
+                <span class="text-xs font-extrabold uppercase tracking-wider text-blue-900 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+                  <i class="fa-solid fa-lock mr-1 text-blue-600"></i> अधिकृत लॉगिन / Portal Login
+                </span>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
+                  हॉस्टल पोर्टल में प्रवेश करें
+                </h3>
+              </div>
+              <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 text-white flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-shield-cat text-lg"></i>
+              </div>
+            </div>
+
+            <!-- Role Selector Tabs -->
+            <div class="grid grid-cols-2 gap-1.5 bg-slate-100 p-1 rounded-xl mb-5 text-xs font-bold"><button type="button" class="py-2.5 px-3 rounded-lg bg-white text-blue-900 shadow-sm border border-slate-200 text-center transition-all flex items-center justify-center space-x-1.5"><i class="fa-solid fa-user-tie text-blue-700"></i><span class="">प्रशासक (Administrator)</span></button><button type="button" class="py-2.5 px-3 rounded-lg text-slate-600 hover:text-slate-900 text-center transition-all flex items-center justify-center space-x-1.5"><i class="fa-solid fa-user-graduate"></i><span class="">छात्र (Student)</span></button></div>
+
+            <!-- Login Form -->
+            <form action="#login" method="POST" class="space-y-4">
+              
+              <!-- 1. Email / Phone / Roll Number Field -->
+              <div><label for="identifier" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5">आधिकारिक ईमेल (Email Address) <span class="text-red-600">*</span></label><div class="relative rounded-xl shadow-sm"><div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><i class="fa-solid fa-envelope"></i></div><input type="email" id="identifier" name="identifier" required="" placeholder="warden@gecmunger.ac.in या student@gecmunger.ac.in" class="block w-full pl-10 pr-3.5 py-3 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"></div><p class="text-[11px] text-slate-500 mt-1 flex items-center"><i class="fa-solid fa-circle-info mr-1 text-blue-600"></i> केवल अधिकृत ईमेल आईडी द्वारा प्रवेश (Email only login)</p></div>
+
+              <!-- 2. Password Field -->
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label for="password" class="block text-xs sm:text-sm font-bold text-slate-800">
+                    पासवर्ड (Password) <span class="text-red-600">*</span>
+                  </label>
+                  <a href="#forgot-password" class="text-xs font-bold text-red-600 hover:text-red-700 hover:underline">
+                    पासवर्ड भूल गए? (Forgot Password?)
+                  </a>
+                </div>
+                <div class="relative rounded-xl shadow-sm">
+                  <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-key"></i>
+                  </div>
+                  <input type="password" id="password" name="password" required="" placeholder="••••••••••••" class="block w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all">
+                  <button type="button" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Remember & Security Captcha Hint -->
+              <div class="flex items-center justify-between text-xs pt-1">
+                <label class="flex items-center text-slate-700 font-medium cursor-pointer">
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 mr-2">
+                  <span class="">मुझे याद रखें (Remember me)</span>
+                </label>
+                <span class="text-slate-500 text-[11px] flex items-center">
+                  <i class="fa-solid fa-lock text-emerald-600 mr-1"></i> 256-bit SSL सुरक्षित
+                </span>
+              </div><div class="bg-blue-50 border border-blue-200 rounded-lg p-2.5 text-[11px] text-blue-900 flex items-start space-x-2"><i class="fa-solid fa-circle-info text-blue-600 mt-0.5 flex-shrink-0"></i><span class=""><strong>सूचना:</strong> सार्वजनिक साइन-अप बंद है। केवल वार्डन/एडमिन द्वारा जोड़े गए <strong>आवंटित (Allotted)</strong> छात्र ही लॉगिन कर सकते हैं।</span></div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="w-full mt-2 bg-gradient-to-r from-[#0f2942] to-[#1e3a8a] hover:from-[#0b1f33] hover:to-[#172e6b] text-white font-bold py-3.5 px-4 rounded-xl shadow-lg hover:shadow-xl transform active:scale-[0.99] transition-all flex items-center justify-center space-x-2 text-sm sm:text-base border border-blue-900">
+                <span class="">लॉगिन करें (Sign In to HMS)</span>
+                <i class="fa-solid fa-arrow-right-to-bracket text-amber-300"></i>
+              </button>
+
+            </form>
+
+            <!-- Quick Demo Fill Helper (from PRD spec) -->
+            
+
+            <!-- New Student Registration Callout -->
+            <div class="mt-4 bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs text-slate-700"><div class="flex items-start space-x-2.5"><i class="fa-solid fa-circle-info text-blue-700 mt-0.5 flex-shrink-0 text-sm"></i><div class="w-full"><p class="font-bold text-slate-900 mb-0.5">सूचना: नए आवेदकों के लिए (Important Note for Applicants)</p><p class="text-[11px] leading-relaxed text-slate-600 mb-2.5">वार्डन/प्रशासन द्वारा आवेदन सत्यापित होने एवं स्थिति <strong>'आवंटित (Allotted)'</strong> अथवा <strong>'प्रतीक्षारत (Waiting)'</strong> अपडेट होने के उपरांत ही छात्र इस पोर्टल में अपने पंजीकृत ईमेल से लॉगिन कर सकते हैं।</p><div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-200 text-xs font-semibold"><a href="#admission-guidelines" class="inline-flex items-center text-blue-700 hover:text-blue-900 bg-white hover:bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 shadow-sm transition-colors"><i class="fa-solid fa-book-bookmark mr-1.5 text-blue-600"></i> प्रवेश प्रक्रिया एवं नियम (Admission Process &amp; Guidelines)</a><a href="#fee-structure" class="inline-flex items-center text-emerald-700 hover:text-emerald-900 bg-white hover:bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 shadow-sm transition-colors"><i class="fa-solid fa-file-invoice-dollar mr-1.5 text-emerald-600"></i> शुल्क संरचना (Fee Structure)</a></div></div></div></div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- 4. RULES & CONTACT FOOTER BAR -->
+  <footer class="bg-[#0b1f3a] text-slate-300 text-xs border-t border-slate-800 py-5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <div class="flex items-center space-x-3 text-center md:text-left">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJwXzsJRDqLVmKrT1ST2Z4DTSlNCwWZiAG-NAYZSgdtu9u5FtFbcxpZQcehV-M6NExNdd8EDYnHwe405j0czEP7VTpVObAxAfl3f3JbefJt4nCsR2MmoZySvrBQmyc3eVrE0qw5aoANYqYOvNO0fWzKlB4nQvN0IIHiFBecui-2r4YGs9L6TGW3RES0lTeQYm3-HraMZnEg9jJh_2YxZYmX6cPYOt5dvJhW-kFhIGTkxYMO5TpU7BbCk-19sLDhH0Xki4" alt="GEC Logo" class="h-9 w-9 object-contain opacity-90 hidden sm:block">
+          <div>
+            <div class="text-white font-bold text-sm">राजकीय अभियंत्रण महाविद्यालय, मुंगेर (GEC Munger)</div>
+            <div class="text-slate-400 text-[11px]">विज्ञान, प्रावैधिकी एवं तकनीकी शिक्षा विभाग, बिहार सरकार के अधीन</div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 text-slate-300 text-xs font-medium">
+          <a href="#rules" class="hover:text-amber-300 transition-colors flex items-center">
+            <i class="fa-solid fa-scale-balanced mr-1 text-slate-400"></i> छात्रावास आचार संहिता
+          </a>
+          <span class="">•</span>
+          <a href="#anti-ragging" class="hover:text-amber-300 transition-colors flex items-center">
+            <i class="fa-solid fa-hand-fist mr-1 text-red-400"></i> एंटी-रैगिंग शपथ
+          </a>
+          <span class="">•</span>
+          <a href="#mess-rebate" class="hover:text-amber-300 transition-colors flex items-center">
+            <i class="fa-solid fa-utensils mr-1 text-emerald-400"></i> मेस रिबेट नियम
+          </a>
+          <span class="">•</span>
+          <a href="#helpdesk" class="hover:text-amber-300 transition-colors flex items-center">
+            <i class="fa-solid fa-life-ring mr-1 text-sky-400"></i> हेल्पलाइन (10AM - 5PM)
+          </a>
+        </div>
+
+        <div class="text-slate-400 text-center md:text-right text-[11px]">
+          © 2026 GEC Munger HMS. सर्वाधिकार सुरक्षित।
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
