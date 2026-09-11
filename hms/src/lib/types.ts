@@ -1,15 +1,17 @@
-export type Role = "superadmin" | "warden" | "student";
+export type Role = "superadmin" | "warden" | "viewer" | "student";
 
 export type StudentStatus = "WAITING" | "ALLOTTED" | "CANCELLED";
 
 export interface IUser {
-  _id?: string;
+  _id?: any;
   name: string;
   email: string;
   mobile: string;
   password?: string;
-  role: "superadmin" | "warden";
+  role: "superadmin" | "warden" | "viewer";
   assignedCategory?: string; // e.g. "Boys Hostel" | "Girls Hostel"
+  designation?: string;
+  status?: "ACTIVE" | "INACTIVE";
   createdAt?: Date;
   updatedAt?: Date;
 }

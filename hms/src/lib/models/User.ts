@@ -28,14 +28,24 @@ const UserSchema = new Schema<IUserDocument>(
     },
     role: {
       type: String,
-      enum: ["superadmin", "warden"],
+      enum: ["superadmin", "warden", "viewer"],
       required: [true, "Role is required"],
       default: "warden",
     },
     assignedCategory: {
       type: String,
       trim: true,
-      // e.g. "Boys Hostel" or "Girls Hostel"
+      // e.g. "Boys Hostel Category" or "Girls Hostel Category"
+    },
+    designation: {
+      type: String,
+      trim: true,
+      default: "Faculty / Administrative Officer",
+    },
+    status: {
+      type: String,
+      enum: ["ACTIVE", "INACTIVE"],
+      default: "ACTIVE",
     },
   },
   {

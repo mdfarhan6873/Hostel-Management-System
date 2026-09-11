@@ -12,27 +12,27 @@ export async function GET() {
 
     await connectToDatabase();
 
-    const wardens = await User.find({ role: "warden" })
+    const users = await User.find()
       .select("-password")
       .sort({ createdAt: -1 })
       .lean();
 
-    const enrichedWardens = await Promise.all(
-      wardens.map(async (warden: any) => {
-        const assignedBlocks = await Block.find({ wardenId: warden._id })
+    const enrichedUsers = await Promise.all(
+      users.map(async (user: any) => {
+        const assignedBlocks = await Block.find({ wardenId: user._id })
           .populate("hostelId", "name type")
           .lean();
 
         return {
-          ...warden,
+          ...user,
           assignedBlocks,
         };
       })
     );
 
-    return NextResponse.json({ success: true, wardens: enrichedWardens });
+    return NextResponse.json({ success: true, wardens: enrichedUsers, users: enrichedUsers });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Failed to fetch wardens" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to fetch users" }, { status: 500 });
   }
 }
 
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
     await connectToDatabase();
     const body = await req.json();
-    const { name, email, mobile, password, assignedCategory } = body;
+    const { name, email, mobile, password, role = "warden", assignedCategory, designation } = body;
 
     if (!name || !email || !mobile || !password) {
       return NextResponse.json(
@@ -64,21 +64,23 @@ export async function POST(req: Request) {
 
     const hashedPassword = await hashPassword(password);
 
-    const newWarden = await User.create({
+    const newUser = await User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
       mobile: mobile.trim(),
       password: hashedPassword,
-      role: "warden",
+      role: role || "warden",
       assignedCategory: assignedCategory?.trim() || "",
+      designation: designation?.trim() || (role === "superadmin" ? "Institutional Head" : role === "warden" ? "Hostel Warden" : "Institutional Observer"),
+      status: "ACTIVE",
     });
 
-    const sanitized = newWarden.toObject();
+    const sanitized = newUser.toObject();
     delete sanitized.password;
 
-    return NextResponse.json({ success: true, warden: sanitized }, { status: 201 });
+    return NextResponse.json({ success: true, warden: sanitized, user: sanitized }, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Failed to create warden" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to create user" }, { status: 500 });
   }
 }
 
@@ -91,15 +93,18 @@ export async function PUT(req: Request) {
 
     await connectToDatabase();
     const body = await req.json();
-    const { id, name, mobile, assignedCategory, password } = body;
+    const { id, name, mobile, assignedCategory, designation, status, password, role } = body;
 
     if (!id) {
-      return NextResponse.json({ error: "Warden ID is required" }, { status: 400 });
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
 
     const updateData: any = {};
     if (name) updateData.name = name.trim();
     if (mobile) updateData.mobile = mobile.trim();
+    if (role) updateData.role = role;
+    if (designation !== undefined) updateData.designation = designation.trim();
+    if (status !== undefined) updateData.status = status;
     if (assignedCategory !== undefined) updateData.assignedCategory = assignedCategory.trim();
     if (password && password.trim().length >= 6) {
       updateData.password = await hashPassword(password.trim());
@@ -108,11 +113,11 @@ export async function PUT(req: Request) {
     const updated = await User.findByIdAndUpdate(id, updateData, { new: true }).select("-password");
 
     if (!updated) {
-      return NextResponse.json({ error: "Warden not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, warden: updated });
+    return NextResponse.json({ success: true, warden: updated, user: updated });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Failed to update warden" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to update user" }, { status: 500 });
   }
 }

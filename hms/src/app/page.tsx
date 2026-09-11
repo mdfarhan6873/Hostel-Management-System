@@ -35,7 +35,7 @@ export default function HomePage() {
         throw new Error(data.message || data.error || "Authentication failed");
       }
       if (data.redirectUrl) {
-        router.push(data.redirectUrl);
+        window.location.href = data.redirectUrl;
       }
     } catch (err: any) {
       setLoginError(err.message);

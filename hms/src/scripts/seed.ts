@@ -37,44 +37,70 @@ async function runSeeder() {
   const wardenHash = await hashPassword("Warden@123");
   const studentHash = await hashPassword("Student@123");
 
-  console.log("👤 Creating Super Admin and Wardens...");
+  console.log("👤 Creating Super Admin, Wardens, and Viewers...");
   const superAdmin = await User.create({
-    name: "Dr. Alok Ranjan (Dean Student Welfare)",
+    name: "Dr. A. K. Sharma (Principal / Institutional Head)",
     email: "superadmin@gecmunger.ac.in",
-    mobile: "+91 9431200001",
+    mobile: "+91 9431000001",
     password: adminHash,
     role: "superadmin",
+    designation: "Principal / Institutional Head",
+    status: "ACTIVE",
   });
 
   const boysWarden = await User.create({
-    name: "Prof. Rajesh Kumar Sharma",
+    name: "Prof. R. K. Singh",
     email: "warden.boys@gecmunger.ac.in",
-    mobile: "+91 9835100002",
+    mobile: "+91 9431234567",
     password: wardenHash,
     role: "warden",
-    assignedCategory: "Boys Hostel",
+    assignedCategory: "Boys Hostel Category",
+    designation: "Associate Professor, Mechanical",
+    status: "ACTIVE",
   });
 
   const girlsWarden = await User.create({
-    name: "Dr. Sunita Kumari",
+    name: "Dr. Neha Kumari",
     email: "warden.girls@gecmunger.ac.in",
-    mobile: "+91 9835100003",
+    mobile: "+91 9123456780",
     password: wardenHash,
     role: "warden",
-    assignedCategory: "Girls Hostel",
+    assignedCategory: "Girls Hostel Category",
+    designation: "Assistant Professor, CSE",
+    status: "ACTIVE",
+  });
+
+  await User.create({
+    name: "Prof. Manoj Jha",
+    email: "academic.dean@gecmunger.ac.in",
+    mobile: "+91 9431099881",
+    password: wardenHash,
+    role: "viewer",
+    designation: "Dean Academic Affairs",
+    status: "ACTIVE",
+  });
+
+  await User.create({
+    name: "Ananya Roy",
+    email: "internal.audit@gecmunger.ac.in",
+    mobile: "+91 9771122334",
+    password: wardenHash,
+    role: "viewer",
+    designation: "Internal Audit & Mess Billing Cell",
+    status: "ACTIVE",
   });
 
   console.log("🏢 Creating Hostel Categories...");
   const boysHostel = await Hostel.create({
-    name: "Boys Hostel",
+    name: "Boys Hostel Category",
     type: "boys",
-    description: "Residential complex for male engineering undergraduates at GEC Munger.",
+    description: "Code: BH-GEC-MGR • Haveli Kharagpur Permanent Campus residential complex for male engineering undergraduates.",
   });
 
   const girlsHostel = await Hostel.create({
-    name: "Girls Hostel",
+    name: "Girls Hostel Category",
     type: "girls",
-    description: "Residential complex for female engineering undergraduates with 24x7 security.",
+    description: "Code: GH-GEC-MGR • Secure Campus Residential Enclave for female engineering undergraduates with 24x7 security.",
   });
 
   console.log("🏗️ Creating Blocks & Floors...");
