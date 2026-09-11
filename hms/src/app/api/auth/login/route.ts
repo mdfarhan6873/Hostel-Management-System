@@ -43,16 +43,11 @@ export async function POST(req: Request) {
         );
       }
 
-      // Check Lifecycle status: only ALLOTTED students are permitted
-      if (student.status !== "ALLOTTED") {
-        const statusMsg =
-          student.status === "WAITING"
-            ? "Your hostel residency status is currently 'WAITING'. Room allotment is in progress. Only allotted students can log into the portal."
-            : `Your hostel residency status is '${student.status}'. Access has been cancelled. Remark: ${student.evictionRemark || "Contact administration."}`;
-
+      // Check Lifecycle status: CANCELLED students are blocked from portal
+      if (student.status === "CANCELLED") {
         return NextResponse.json(
           {
-            error: statusMsg,
+            error: `Your hostel residency has been CANCELLED or EVICTED. Remark: ${student.evictionRemark || "Contact warden administration."}`,
             status: student.status,
           },
           { status: 403 }

@@ -23,18 +23,54 @@ export async function GET() {
       return NextResponse.json({ error: "Student record not found" }, { status: 404 });
     }
 
-    if (student.status !== "ALLOTTED") {
+    if (student.status === "CANCELLED") {
       return NextResponse.json(
         {
           error: "ACCESS_RESTRICTED",
           status: student.status,
-          message:
-            student.status === "WAITING"
-              ? "Your hostel admission application is currently in the WAITING QUEUE. Room and furniture allocation has not been finalized by the warden office."
-              : "Your hostel residency has been CANCELLED or EVICTED by the warden administration.",
+          message: `Your hostel residency has been CANCELLED or EVICTED. Remark: ${student.evictionRemark || "Contact warden administration."}`,
         },
         { status: 403 }
       );
+    }
+
+    // Roommate and Warden lookup
+    let roommate: any = null;
+    let wardenInfo: any = null;
+
+    if (student.roomId) {
+      const room = await Room.findById(student.roomId).lean();
+      if (room && room.furnitureGroups) {
+        const otherOcc = room.furnitureGroups.find(
+          (fg: any) => fg.isOccupied && fg.occupiedBy && fg.occupiedBy.toString() !== student._id.toString()
+        );
+        if (otherOcc) {
+          roommate = {
+            name: otherOcc.occupiedStudentName,
+            rollNo: otherOcc.occupiedStudentRoll,
+            branch: otherOcc.occupiedStudentBranch,
+            session: otherOcc.occupiedStudentSession,
+            groupName: otherOcc.groupName,
+          };
+        }
+      }
+    }
+
+    if (student.blockId) {
+      const block = await Block.findById(student.blockId).populate("wardenId", "name email mobile").lean();
+      if (block && block.wardenId) {
+        wardenInfo = block.wardenId;
+      }
+    }
+
+    // Waiting queue position
+    let queuePosition = 0;
+    if (student.status === "WAITING") {
+      queuePosition = await Student.countDocuments({
+        status: "WAITING",
+        createdAt: { $lte: student.createdAt },
+      });
+      if (queuePosition === 0) queuePosition = 1;
     }
 
     const [bills, leaves] = await Promise.all([
@@ -44,16 +80,25 @@ export async function GET() {
 
     const pendingBills = bills.filter((b) => b.status === "PENDING");
     const totalPendingDues = pendingBills.reduce((acc, b) => acc + (b.netAmount || 0), 0);
+    const totalPaidAmount = bills
+      .filter((b) => b.status === "PAID")
+      .reduce((acc, b) => acc + (b.netAmount || 0), 0);
+    const totalRebateSaved = bills.reduce((acc, b) => acc + (b.rebateAmount || 0), 0);
 
     return NextResponse.json({
       success: true,
       student,
+      roommate,
+      wardenInfo,
+      queuePosition,
       bills,
       leaves,
       stats: {
         totalBills: bills.length,
         pendingBillsCount: pendingBills.length,
         totalPendingDues,
+        totalPaidAmount,
+        totalRebateSaved,
         approvedLeavesCount: leaves.filter((l) => l.status === "APPROVED").length,
       },
     });
