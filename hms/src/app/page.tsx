@@ -3,11 +3,14 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+import { useToast } from "@/components/ui/ToastContext";
+
 type Language = "hi" | "en";
 type UserRole = "student" | "admin";
 
 export default function HomePage() {
   const router = useRouter();
+  const { success, error, info } = useToast();
   const [lang, setLang] = useState<Language>("en");
   const [role, setRole] = useState<UserRole>("student");
   const [identifier, setIdentifier] = useState("");
@@ -16,6 +19,28 @@ export default function HomePage() {
   const [fontSizeOffset, setFontSizeOffset] = useState<number>(0);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Client-side authentication check: redirect active sessions to their respective dashboard
+    fetch("/api/auth/session")
+      .then((res) => {
+        const ct = res.headers.get("content-type");
+        if (ct && ct.includes("application/json")) return res.json();
+        return null;
+      })
+      .then((data) => {
+        if (data && data.authenticated && data.user) {
+          const target =
+            data.user.role === "superadmin"
+              ? "/superadmin"
+              : data.user.role === "warden"
+              ? "/warden"
+              : "/student";
+          router.push(target);
+        }
+      })
+      .catch(() => {});
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,10 +61,14 @@ export default function HomePage() {
         throw new Error(data.message || data.error || "Authentication failed");
       }
       if (data.redirectUrl) {
-        window.location.href = data.redirectUrl;
+        success(`Welcome, ${data.user?.name || "User"}! Redirecting to dashboard...`, "Authentication Successful");
+        setTimeout(() => {
+          window.location.href = data.redirectUrl;
+        }, 300);
       }
     } catch (err: any) {
       setLoginError(err.message);
+      error(err.message, "Login Failed");
     } finally {
       setIsLoggingIn(false);
     }

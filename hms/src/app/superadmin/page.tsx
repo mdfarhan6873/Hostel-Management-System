@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ToastNotification } from "@/components/ui/ToastNotification";
+import { useToast } from "@/components/ui/ToastContext";
 import { SuperAdminHeader } from "@/components/dashboard/superadmin/SuperAdminHeader";
 import { HostelCategoryManager } from "@/components/dashboard/superadmin/HostelCategoryManager";
 import { UserRegistry } from "@/components/dashboard/superadmin/UserRegistry";
@@ -69,13 +70,18 @@ export default function SuperAdminDashboard() {
     effectiveDate: new Date().toISOString().split("T")[0],
   });
 
+  const toast = useToast();
+
   useEffect(() => {
     fetchSessionAndData();
   }, []);
 
   const showToast = (type: "success" | "error", msg: string) => {
-    setNotification({ type, msg });
-    setTimeout(() => setNotification(null), 4000);
+    if (type === "success") {
+      toast.success(msg);
+    } else {
+      toast.error(msg);
+    }
   };
 
   async function fetchSessionAndData() {
@@ -90,16 +96,18 @@ export default function SuperAdminDashboard() {
         const data = await res.json();
         if (data.authenticated && data.user) {
           if (data.user.role !== "superadmin") {
-            router.push("/login");
+            router.push(data.user.role === "warden" ? "/warden" : "/student");
             return;
           }
           setCurrentUser(data.user);
         } else {
-          // Default session context for root management
-          setCurrentUser({ name: "Dr. A. K. Sharma", role: "superadmin" });
+          // Unauthenticated: redirect to landing page
+          router.push("/");
+          return;
         }
       } else {
-        setCurrentUser({ name: "Dr. A. K. Sharma", role: "superadmin" });
+        router.push("/");
+        return;
       }
 
       const [catRes, userRes] = await Promise.all([
@@ -131,7 +139,10 @@ export default function SuperAdminDashboard() {
   const handleLogout = async () => {
     try {
       const res = await fetch("/api/auth/logout", { method: "POST" });
-      if (res.ok) router.push("/login");
+      if (res.ok) {
+        toast.info("Logged out successfully.", "Session Ended");
+        router.push("/");
+      }
     } catch (err) {
       console.error("Logout failed", err);
     }

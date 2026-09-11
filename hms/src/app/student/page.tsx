@@ -13,9 +13,11 @@ import { StudentModals } from "@/components/dashboard/student/StudentModals";
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useToast } from "@/components/ui/ToastContext";
 
 export default function StudentPortal() {
   const router = useRouter();
+  const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [accessError, setAccessError] = useState<string | null>(null);
 
@@ -57,8 +59,11 @@ export default function StudentPortal() {
   }, []);
 
   const showToast = (type: "success" | "error", msg: string) => {
-    setNotification({ type, msg });
-    setTimeout(() => setNotification(null), 4000);
+    if (type === "success") {
+      toast.success(msg);
+    } else {
+      toast.error(msg);
+    }
   };
 
   const fetchStudentData = async () => {

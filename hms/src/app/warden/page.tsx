@@ -14,6 +14,7 @@ import { WardenModals } from "@/components/dashboard/warden/WardenModals";
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useToast } from "@/components/ui/ToastContext";
 
 export default function WardenPortal() {
   const router = useRouter();
@@ -202,13 +203,18 @@ export default function WardenPortal() {
     msg: string;
   } | null>(null);
 
+  const toast = useToast();
+
   useEffect(() => {
     fetchSessionAndAllData();
   }, []);
 
   const showToast = (type: "success" | "error", msg: string) => {
-    setNotification({ type, msg });
-    setTimeout(() => setNotification(null), 4000);
+    if (type === "success") {
+      toast.success(msg);
+    } else {
+      toast.error(msg);
+    }
   };
 
   async function fetchSessionAndAllData() {
