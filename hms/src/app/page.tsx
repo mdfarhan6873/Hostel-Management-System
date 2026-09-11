@@ -1,17 +1,48 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type Language = "hi" | "en";
 type UserRole = "student" | "admin";
 
 export default function HomePage() {
+  const router = useRouter();
   const [lang, setLang] = useState<Language>("en");
   const [role, setRole] = useState<UserRole>("student");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fontSizeOffset, setFontSizeOffset] = useState<number>(0);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError(null);
+    setIsLoggingIn(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: identifier.trim(),
+          password,
+          role,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || data.error || "Authentication failed");
+      }
+      if (data.redirectUrl) {
+        router.push(data.redirectUrl);
+      }
+    } catch (err: any) {
+      setLoginError(err.message);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
 
   const t = {
     hi: {
@@ -333,15 +364,6 @@ export default function HomePage() {
   };
 
   const curr = t[lang];
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (role === "admin") {
-      window.location.href = "/warden";
-    } else {
-      window.location.href = "/student";
-    }
-  };
 
   const adjustFontSize = (delta: number) => {
     setFontSizeOffset((prev) => {
@@ -850,17 +872,35 @@ export default function HomePage() {
                     <span>{curr.login.closedAlert}</span>
                   </div>
 
+                  {/* Error Notification */}
+                  {loginError && (
+                    <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-800 leading-tight flex items-start space-x-2 animate-fadeIn">
+                      <i className="fa-solid fa-circle-exclamation text-red-600 mt-0.5 flex-shrink-0"></i>
+                      <div>
+                        <span className="font-bold block">Access Denied</span>
+                        <span className="text-[11px] text-red-700">{loginError}</span>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-[#0f2942] to-[#1e3a8a] hover:from-[#0b1f33] hover:to-[#172e6b] text-white font-bold py-2.5 px-4 rounded-xl shadow-md hover:shadow-lg active:scale-[0.99] transition-all flex items-center justify-center space-x-2 text-xs sm:text-sm border border-blue-900 min-h-[40px]"
+                    disabled={isLoggingIn}
+                    className="w-full bg-gradient-to-r from-[#0f2942] to-[#1e3a8a] hover:from-[#0b1f33] hover:to-[#172e6b] disabled:opacity-60 text-white font-bold py-2.5 px-4 rounded-xl shadow-md hover:shadow-lg active:scale-[0.99] transition-all flex items-center justify-center space-x-2 text-xs sm:text-sm border border-blue-900 min-h-[40px]"
                   >
-                    <span>
-                      {role === "student"
-                        ? curr.login.submitBtnStudent
-                        : curr.login.submitBtnAdmin}
-                    </span>
-                    <i className="fa-solid fa-arrow-right-to-bracket text-amber-300 text-xs"></i>
+                    {isLoggingIn ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <span>
+                          {role === "student"
+                            ? curr.login.submitBtnStudent
+                            : curr.login.submitBtnAdmin}
+                        </span>
+                        <i className="fa-solid fa-arrow-right-to-bracket text-amber-300 text-xs"></i>
+                      </>
+                    )}
                   </button>
                 </form>
 
