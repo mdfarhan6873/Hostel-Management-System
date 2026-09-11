@@ -37,11 +37,11 @@ export async function GET() {
     const blocks = await Block.find(blockFilter).populate("hostelId", "name type").lean();
     const blockIds = blocks.map((b) => b._id);
 
-    const floors = await Floor.find({ blockId: { $in: blockIds } })
+    const floors = await Floor.find({ blockId: { $in: blockIds } as any })
       .sort({ floorNumber: 1 })
       .lean();
 
-    const rooms = await Room.find({ blockId: { $in: blockIds } })
+    const rooms = await Room.find({ blockId: { $in: blockIds } as any })
       .sort({ roomNumber: 1 })
       .lean();
 

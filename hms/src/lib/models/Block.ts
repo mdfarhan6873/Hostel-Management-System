@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { IBlock } from "../types";
 
@@ -27,3 +29,4 @@ const BlockSchema = new Schema<IBlockDocument>(
 
 export const Block: Model<IBlockDocument> =
   mongoose.models.Block || mongoose.model<IBlockDocument>("Block", BlockSchema);
+

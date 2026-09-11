@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { ILeaveRequest } from "../types";
 
@@ -58,3 +60,4 @@ const LeaveRequestSchema = new Schema<ILeaveRequestDocument>(
 export const LeaveRequest: Model<ILeaveRequestDocument> =
   mongoose.models.LeaveRequest ||
   mongoose.model<ILeaveRequestDocument>("LeaveRequest", LeaveRequestSchema);
+

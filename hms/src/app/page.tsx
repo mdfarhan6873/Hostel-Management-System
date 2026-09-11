@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type Language = "hi" | "en";
 type UserRole = "student" | "admin";
@@ -550,14 +551,16 @@ export default function HomePage() {
 
       {/* 3. HERO SECTION (BIG BACKGROUND IMAGE + NOTICE BOARD + COMPACT LOGIN CARD) */}
       <main className="relative flex-1 flex items-center py-6 sm:py-8 lg:py-10 bg-slate-950 overflow-hidden">
-        {/* Optimized Background Image (WebP ~220KB, High Priority, Instant Load) */}
+        {/* Optimized Background Image (Next.js Image, High Priority, Instant Load) */}
         <div className="absolute inset-0 -z-0 overflow-hidden">
-          <img
+          <Image
             src="/landing_page_image.webp"
             alt="GEC Munger Campus"
-            fetchPriority="high"
-            decoding="sync"
-            className="w-full h-full object-cover object-center pointer-events-none transform scale-100"
+            fill
+            priority
+            className="object-cover object-center pointer-events-none"
+            sizes="100vw"
+            quality={90}
           />
         </div>
 

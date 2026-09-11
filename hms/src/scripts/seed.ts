@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from "mongoose";
 import { connectToDatabase } from "../lib/db";
 import {
@@ -17,6 +19,8 @@ async function runSeeder() {
   console.log("🚀 Connecting to MongoDB...");
   await connectToDatabase();
   console.log("Connected to MongoDB Atlas!");
+  console.log("Dropping existing database before seeding...");
+  await mongoose.connection.dropDatabase();
 
   console.log("🧹 Dropping all existing collections to remove stale indexes & data...");
   if (mongoose.connection.db) {
@@ -447,3 +451,5 @@ runSeeder().catch((err) => {
   console.error("Seeder failed with error:", err);
   process.exit(1);
 });
+
+

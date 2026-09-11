@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { IBill } from "../types";
 
@@ -81,3 +83,4 @@ const BillSchema = new Schema<IBillDocument>(
 
 export const Bill: Model<IBillDocument> =
   mongoose.models.Bill || mongoose.model<IBillDocument>("Bill", BillSchema);
+

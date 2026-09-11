@@ -43,7 +43,7 @@ async function runSeeder() {
     const studentHash = await hashPassword("Student@123");
 
     // 2. CREATE SUPER ADMIN & WARDENS
-    const superAdmin = await User.create({
+    const superAdmin: any = await User.create({
       name: "Dr. Alok Ranjan (Dean Student Welfare)",
       email: "superadmin@gecmunger.ac.in",
       mobile: "+91 9431200001",
@@ -51,7 +51,7 @@ async function runSeeder() {
       role: "superadmin",
     });
 
-    const boysWarden = await User.create({
+    const boysWarden: any = await User.create({
       name: "Prof. Rajesh Kumar Sharma",
       email: "warden.boys@gecmunger.ac.in",
       mobile: "+91 9835100002",
@@ -60,7 +60,7 @@ async function runSeeder() {
       assignedCategory: "Boys Hostel",
     });
 
-    const girlsWarden = await User.create({
+    const girlsWarden: any = await User.create({
       name: "Dr. Sunita Kumari",
       email: "warden.girls@gecmunger.ac.in",
       mobile: "+91 9835100003",
@@ -70,51 +70,51 @@ async function runSeeder() {
     });
 
     // 3. CREATE HOSTEL CATEGORIES
-    const boysHostel = await Hostel.create({
+    const boysHostel: any = await Hostel.create({
       name: "Boys Hostel",
       type: "boys",
       description: "Residential complex for male engineering undergraduates at GEC Munger.",
     });
 
-    const girlsHostel = await Hostel.create({
+    const girlsHostel: any = await Hostel.create({
       name: "Girls Hostel",
       type: "girls",
       description: "Residential complex for female engineering undergraduates with 24x7 security.",
     });
 
     // 4. CREATE BLOCKS & FLOORS
-    const blockA = await Block.create({
+    const blockA: any = await Block.create({
       name: "Block A (Aryabhata Wing)",
       hostelId: boysHostel._id,
       wardenId: boysWarden._id,
     });
 
-    const blockB = await Block.create({
+    const blockB: any = await Block.create({
       name: "Block B (Chanakya Wing)",
       hostelId: boysHostel._id,
       wardenId: boysWarden._id,
     });
 
-    const blockG = await Block.create({
+    const blockG: any = await Block.create({
       name: "Block A (Gargi Wing)",
       hostelId: girlsHostel._id,
       wardenId: girlsWarden._id,
     });
 
-    const groundFloorA = await Floor.create({
+    const groundFloorA: any = await Floor.create({
       name: "Ground Floor",
       floorNumber: 0,
       blockId: blockA._id,
     });
 
-    const firstFloorA = await Floor.create({
+    const firstFloorA: any = await Floor.create({
       name: "First Floor",
       floorNumber: 1,
       blockId: blockA._id,
     });
 
     // 5. CREATE ROOMS WITH FURNITURE GROUPS (CUSTOM UNIQUE IDs)
-    const room101 = await Room.create({
+    const room101: any = await Room.create({
       roomNumber: "101",
       floorId: groundFloorA._id,
       blockId: blockA._id,
@@ -139,7 +139,7 @@ async function runSeeder() {
       ],
     });
 
-    const room102 = await Room.create({
+    const room102: any = await Room.create({
       roomNumber: "102",
       floorId: groundFloorA._id,
       blockId: blockA._id,
@@ -164,7 +164,7 @@ async function runSeeder() {
       ],
     });
 
-    const room103 = await Room.create({
+    const room103: any = await Room.create({
       roomNumber: "103",
       floorId: groundFloorA._id,
       blockId: blockA._id,
@@ -197,7 +197,7 @@ async function runSeeder() {
     });
 
     // 6. CREATE ALLOTTED AND WAITING STUDENTS
-    const student1 = await Student.create({
+    const student1: any = await Student.create({
       fullName: "Md Farhan Naiyyar",
       email: "student@gecmunger.ac.in",
       mobile: "+91 7004123456",
@@ -226,7 +226,7 @@ async function runSeeder() {
       assignedChairId: "CHR-BA-101-A",
     });
 
-    const student2 = await Student.create({
+    const student2: any = await Student.create({
       fullName: "Rahul Kumar Singh",
       email: "rahul.cse@gecmunger.ac.in",
       mobile: "+91 8210987654",
@@ -256,23 +256,24 @@ async function runSeeder() {
     });
 
     // Update Room 101 occupancy
-    room101.furnitureGroups[0].isOccupied = true;
-    room101.furnitureGroups[0].occupiedBy = student1._id as any;
-    room101.furnitureGroups[0].occupiedStudentName = student1.fullName;
-    room101.furnitureGroups[0].occupiedStudentRoll = student1.rollNo;
-    room101.furnitureGroups[0].occupiedStudentBranch = student1.branch;
-    room101.furnitureGroups[0].occupiedStudentSession = student1.session;
+    const r101 = room101 as any;
+    r101.furnitureGroups[0].isOccupied = true;
+    r101.furnitureGroups[0].occupiedBy = student1._id;
+    r101.furnitureGroups[0].occupiedStudentName = student1.fullName;
+    r101.furnitureGroups[0].occupiedStudentRoll = student1.rollNo;
+    r101.furnitureGroups[0].occupiedStudentBranch = student1.branch;
+    r101.furnitureGroups[0].occupiedStudentSession = student1.session;
 
-    room101.furnitureGroups[1].isOccupied = true;
-    room101.furnitureGroups[1].occupiedBy = student2._id as any;
-    room101.furnitureGroups[1].occupiedStudentName = student2.fullName;
-    room101.furnitureGroups[1].occupiedStudentRoll = student2.rollNo;
-    room101.furnitureGroups[1].occupiedStudentBranch = student2.branch;
-    room101.furnitureGroups[1].occupiedStudentSession = student2.session;
-    await room101.save();
+    r101.furnitureGroups[1].isOccupied = true;
+    r101.furnitureGroups[1].occupiedBy = student2._id;
+    r101.furnitureGroups[1].occupiedStudentName = student2.fullName;
+    r101.furnitureGroups[1].occupiedStudentRoll = student2.rollNo;
+    r101.furnitureGroups[1].occupiedStudentBranch = student2.branch;
+    r101.furnitureGroups[1].occupiedStudentSession = student2.session;
+    await r101.save();
 
     // Student 3: WAITING
-    const studentWaiting = await Student.create({
+    const studentWaiting: any = await Student.create({
       fullName: "Amit Kumar Verma",
       email: "waiting.student@gecmunger.ac.in",
       mobile: "+91 9123456780",
@@ -292,7 +293,7 @@ async function runSeeder() {
     });
 
     // Student 4: CANCELLED / EVICTED
-    const studentEvicted = await Student.create({
+    const studentEvicted: any = await Student.create({
       fullName: "Vikramaditya Roy",
       email: "evicted.student@gecmunger.ac.in",
       mobile: "+91 9771234560",
@@ -315,7 +316,7 @@ async function runSeeder() {
     });
 
     // 7. CREATE SAMPLE LEAVE REQUEST (With handwritten application URL)
-    const sampleLeave = await LeaveRequest.create({
+    const sampleLeave: any = await LeaveRequest.create({
       studentId: student1._id,
       startDate: new Date("2026-08-05"),
       endDate: new Date("2026-08-10"),

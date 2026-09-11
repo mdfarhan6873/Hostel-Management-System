@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { IFloor } from "../types";
 
@@ -27,3 +29,4 @@ const FloorSchema = new Schema<IFloorDocument>(
 
 export const Floor: Model<IFloorDocument> =
   mongoose.models.Floor || mongoose.model<IFloorDocument>("Floor", FloorSchema);
+

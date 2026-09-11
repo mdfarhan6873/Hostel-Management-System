@@ -3,7 +3,7 @@ export type Role = "superadmin" | "warden" | "viewer" | "student";
 export type StudentStatus = "WAITING" | "ALLOTTED" | "CANCELLED";
 
 export interface IUser {
-  _id?: any;
+  _id?: string;
   name: string;
   email: string;
   mobile: string;
@@ -54,10 +54,10 @@ export interface IStudent {
   status: StudentStatus;
 
   // Allocated Infrastructure Details
-  hostelId?: any;
-  blockId?: any;
-  floorId?: any;
-  roomId?: any;
+  hostelId?: string;
+  blockId?: string;
+  floorId?: string;
+  roomId?: string;
   furnitureGroupName?: string;
   assignedBedId?: string;
   assignedTableId?: string;
@@ -78,7 +78,7 @@ export interface IFurnitureGroup {
   tableId?: string;  // e.g. "TAB-101-A"
   chairId?: string;  // e.g. "CHR-101-A"
   isOccupied?: boolean;
-  occupiedBy?: any; // studentId
+  occupiedBy?: string; // studentId
   occupiedStudentName?: string;
   occupiedStudentRoll?: string;
   occupiedStudentBranch?: string;
@@ -86,11 +86,11 @@ export interface IFurnitureGroup {
 }
 
 export interface IRoom {
-  _id?: any;
+  _id?: string;
   roomNumber: string;
-  floorId: any;
-  blockId: any;
-  hostelId: any;
+  floorId: string;
+  blockId: string;
+  hostelId: string;
   capacity: number; // 1, 2, 3
   roomType: "Single" | "Double" | "Triple" | string;
   furnitureGroups: IFurnitureGroup[];
@@ -99,25 +99,25 @@ export interface IRoom {
 }
 
 export interface IFloor {
-  _id?: any;
+  _id?: string;
   name: string; // e.g. "Ground Floor", "1st Floor"
   floorNumber: number;
-  blockId: any;
+  blockId: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface IBlock {
-  _id?: any;
+  _id?: string;
   name: string; // e.g. "Block A", "Block B"
-  hostelId: any;
-  wardenId?: any;
+  hostelId: string;
+  wardenId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface IHostel {
-  _id?: any;
+  _id?: string;
   name: string; // e.g. "Boys Hostel", "Girls Hostel"
   type: "boys" | "girls" | string;
   description?: string;
@@ -126,9 +126,9 @@ export interface IHostel {
 }
 
 export interface IBill {
-  _id?: any;
-  studentId: any;
-  wardenId: any;
+  _id?: string;
+  studentId: string;
+  wardenId: string;
   title: string;
   billType: "mess" | "rent" | "maintenance" | "fine" | string;
   billingPeriod: string; // e.g. "August 2026" or "Jan-July 2026"
@@ -147,15 +147,15 @@ export interface IBill {
 }
 
 export interface ILeaveRequest {
-  _id?: any;
-  studentId: any;
+  _id?: string;
+  studentId: string;
   startDate: Date;
   endDate: Date;
   daysCount: number;
   reason: string;
   handwrittenApplicationUrl?: string;
   status: "PENDING" | "APPROVED" | "REJECTED";
-  reviewedBy?: any;
+  reviewedBy?: string;
   reviewedAt?: Date;
   rejectionReason?: string;
   createdAt?: Date;

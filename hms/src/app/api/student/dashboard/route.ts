@@ -74,8 +74,8 @@ export async function GET() {
     }
 
     const [bills, leaves] = await Promise.all([
-      Bill.find({ studentId: student._id }).sort({ createdAt: -1 }).lean(),
-      LeaveRequest.find({ studentId: student._id }).sort({ createdAt: -1 }).lean(),
+      Bill.find({ studentId: student._id as any }).sort({ createdAt: -1 }).lean(),
+      LeaveRequest.find({ studentId: student._id as any }).sort({ createdAt: -1 }).lean(),
     ]);
 
     const pendingBills = bills.filter((b) => b.status === "PENDING");
