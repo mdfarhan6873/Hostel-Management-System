@@ -18,7 +18,7 @@ export function SuperAdminHeader({ currentUser, handleLogout }: SuperAdminHeader
           <div className="flex items-center gap-3.5 sm:gap-4">
             <div className="relative flex-shrink-0">
               <Image
-                src="/munger.png"
+                src="/logo.webp"
                 alt="GEC Munger Official Emblem"
                 width={56}
                 height={56}
@@ -59,12 +59,6 @@ export function SuperAdminHeader({ currentUser, handleLogout }: SuperAdminHeader
             </div>
 
             <div className="flex items-center gap-2">
-              <div
-                title={currentUser?.email}
-                className="h-10 w-10 rounded-full bg-white border border-slate-300 flex items-center justify-center text-slate-900 font-bold text-sm select-none"
-              >
-                SA
-              </div>
               <button
                 onClick={handleLogout}
                 title="Logout from Super Admin Console"

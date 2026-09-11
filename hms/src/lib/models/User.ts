@@ -53,5 +53,9 @@ const UserSchema = new Schema<IUserDocument>(
   }
 );
 
+if (mongoose.models.User && !mongoose.models.User.schema.paths.assignedCategory) {
+  delete (mongoose.models as any).User;
+}
+
 export const User: Model<IUserDocument> =
   mongoose.models.User || mongoose.model<IUserDocument>("User", UserSchema);

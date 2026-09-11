@@ -119,7 +119,8 @@ export interface IBlock {
 export interface IHostel {
   _id?: string;
   name: string; // e.g. "Boys Hostel", "Girls Hostel"
-  type: "boys" | "girls" | string;
+  code?: string; // e.g. "BH-GEC-MGR"
+  type: "boys" | "girls" | "coed" | string;
   description?: string;
   createdAt?: Date;
   updatedAt?: Date;

@@ -6,6 +6,9 @@
 - **Styling**: Clean, Modern Custom CSS Design System
 - **Document Status**: **LOCKED / APPROVED**
 - **Location**: `/docs/PRD.md`
+- **Sub-System Specifications**:
+  - [Super Admin Dashboard PRD](/docs/SUPER_ADMIN_PRD.md)
+
 
 ---
 

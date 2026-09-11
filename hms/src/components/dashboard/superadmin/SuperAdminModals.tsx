@@ -10,7 +10,13 @@ export function SuperAdminModals({
   handleHostelSubmit,
   hostelForm,
   setHostelForm,
-  
+
+  showEditHostelModal,
+  setShowEditHostelModal,
+  handleEditHostelSubmit,
+  editHostelForm,
+  setEditHostelForm,
+
   showAddUserModal,
   setShowAddUserModal,
   handleUserSubmit,
@@ -18,11 +24,22 @@ export function SuperAdminModals({
   setUserForm,
   categories,
 
+  showEditUserModal,
+  setShowEditUserModal,
+  handleEditUserSubmit,
+  editUserForm,
+  setEditUserForm,
+
   showAssignWardenModal,
   setShowAssignWardenModal,
   handleAssignSubmit,
   assignForm,
   setAssignForm,
+
+  showDeleteModal,
+  setShowDeleteModal,
+  deleteTarget,
+  handleConfirmDelete,
 
   showDiagnosticsModal,
   setShowDiagnosticsModal,
@@ -95,25 +112,11 @@ export function SuperAdminModals({
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">
-                  Blocks / Wings (Comma Separated) *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g., Block A (Chanakya), Block B (Aryabhata)"
-                  value={hostelForm.initialBlocks}
-                  onChange={(e) => setHostelForm({ ...hostelForm, initialBlocks: e.target.value })}
-                  className="w-full rounded-md border border-slate-300 text-xs py-2 px-3 focus:border-slate-900 focus:ring-0"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Campus Sector &amp; Notes</label>
+                <label className="block font-semibold text-slate-700 mb-1">Description (Optional)</label>
                 <textarea
                   rows={2}
-                  placeholder="Haveli Kharagpur Permanent Campus North Wing"
-                  value={hostelForm.description}
+                  placeholder="Additional institutional notes..."
+                  value={hostelForm.description || ""}
                   onChange={(e) => setHostelForm({ ...hostelForm, description: e.target.value })}
                   className="w-full rounded-md border border-slate-300 text-xs py-2 px-3 focus:border-slate-900 focus:ring-0"
                 />
@@ -139,7 +142,99 @@ export function SuperAdminModals({
         </div>
       )}
 
-      {/* MODAL 2: ADD NEW USER */}
+      {/* MODAL: EDIT HOSTEL CATEGORY */}
+      {showEditHostelModal && editHostelForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 overflow-y-auto">
+          <div className="bg-white rounded-xl max-w-lg w-full border border-slate-300 overflow-hidden my-8 animate-scaleUp">
+            <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded bg-white border border-slate-300 text-slate-900 flex items-center justify-center font-bold text-sm">
+                  <i className="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Edit Hostel Category</h3>
+                  <p className="text-xs text-slate-500">Update category details and demographic type</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowEditHostelModal(false)}
+                className="text-slate-400 hover:text-slate-700 p-1 transition cursor-pointer"
+              >
+                <i className="fa-solid fa-xmark text-base"></i>
+              </button>
+            </div>
+
+            <form onSubmit={handleEditHostelSubmit} className="p-5 space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">
+                  Category Title (English &amp; Hindi) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editHostelForm.name}
+                  onChange={(e) => setEditHostelForm({ ...editHostelForm, name: e.target.value })}
+                  className="w-full rounded-md border border-slate-300 text-xs py-2 px-3 focus:border-slate-900 focus:ring-0"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Prefix Code *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editHostelForm.code}
+                    onChange={(e) => setEditHostelForm({ ...editHostelForm, code: e.target.value.toUpperCase() })}
+                    className="w-full rounded-md border border-slate-300 text-xs uppercase font-mono py-2 px-3 focus:border-slate-900 focus:ring-0"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Gender Demographic *</label>
+                  <select
+                    value={editHostelForm.type}
+                    onChange={(e) => setEditHostelForm({ ...editHostelForm, type: e.target.value })}
+                    className="w-full rounded-md border border-slate-300 text-xs py-2 px-3 focus:border-slate-900 focus:ring-0 bg-white"
+                  >
+                    <option value="boys">Male (Boys Hostel)</option>
+                    <option value="girls">Female (Girls Hostel)</option>
+                    <option value="coed">Staff / Co-educational</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Description (Optional)</label>
+                <textarea
+                  rows={2}
+                  value={editHostelForm.description || ""}
+                  onChange={(e) => setEditHostelForm({ ...editHostelForm, description: e.target.value })}
+                  className="w-full rounded-md border border-slate-300 text-xs py-2 px-3 focus:border-slate-900 focus:ring-0"
+                  placeholder="Additional institutional notes..."
+                />
+              </div>
+
+              <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowEditHostelModal(false)}
+                  className="rounded-full px-4 py-2 border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-full px-5 py-2 bg-slate-900 text-white font-bold hover:bg-black transition cursor-pointer"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: ADD NEW WARDEN */}
       {showAddUserModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 overflow-y-auto">
           <div className="bg-white rounded-xl max-w-lg w-full border border-slate-300 overflow-hidden my-8 animate-scaleUp">
@@ -149,8 +244,8 @@ export function SuperAdminModals({
                   <i className="fa-solid fa-user-plus"></i>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900">Add New User</h3>
-                  <p className="text-xs text-slate-500">Role assignment strictly honoring PRD governance (§3.1)</p>
+                  <h3 className="text-base font-bold text-slate-900">Add New Warden</h3>
+                  <p className="text-xs text-slate-500">Create new warden credentials and assign to a category</p>
                 </div>
               </div>
               <button
@@ -215,112 +310,61 @@ export function SuperAdminModals({
 
               <div>
                 <label className="block font-semibold text-slate-700 mb-1.5">Permitted System Role *</label>
-                <div className="grid grid-cols-3 gap-2">
-                  <label
-                    className={`relative flex flex-col items-center p-2 rounded-lg border cursor-pointer transition text-center ${
-                      userForm.role === "warden"
-                        ? "border-slate-900 bg-slate-50 font-bold"
-                        : "border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="role"
-                      value="warden"
-                      checked={userForm.role === "warden"}
-                      onChange={() => setUserForm({ ...userForm, role: "warden" })}
-                      className="sr-only"
-                    />
-                    <i className="fa-solid fa-user-shield text-slate-700 text-sm mb-1"></i>
-                    <span className="font-bold text-slate-900 text-xs">Warden</span>
-                    <span className="text-[10px] text-slate-500">Category Bound</span>
-                  </label>
-
-                  <label
-                    className={`relative flex flex-col items-center p-2 rounded-lg border cursor-pointer transition text-center ${
-                      userForm.role === "viewer"
-                        ? "border-slate-900 bg-slate-50 font-bold"
-                        : "border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="role"
-                      value="viewer"
-                      checked={userForm.role === "viewer"}
-                      onChange={() => setUserForm({ ...userForm, role: "viewer" })}
-                      className="sr-only"
-                    />
-                    <i className="fa-solid fa-eye text-slate-700 text-sm mb-1"></i>
-                    <span className="font-bold text-slate-900 text-xs">Viewer</span>
-                    <span className="text-[10px] text-slate-500">Read-Only</span>
-                  </label>
-
-                  <label
-                    className={`relative flex flex-col items-center p-2 rounded-lg border cursor-pointer transition text-center ${
-                      userForm.role === "superadmin"
-                        ? "border-slate-900 bg-slate-50 font-bold"
-                        : "border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="role"
-                      value="superadmin"
-                      checked={userForm.role === "superadmin"}
-                      onChange={() => setUserForm({ ...userForm, role: "superadmin" })}
-                      className="sr-only"
-                    />
-                    <i className="fa-solid fa-shield text-slate-700 text-sm mb-1"></i>
-                    <span className="font-bold text-slate-900 text-xs">Super Admin</span>
-                    <span className="text-[10px] text-slate-500">Root Governance</span>
-                  </label>
+                <div className="p-3 rounded-lg border border-slate-900 bg-slate-50 flex items-center justify-center gap-2">
+                  <i className="fa-solid fa-user-shield text-slate-700"></i>
+                  <span className="font-bold text-slate-900 text-sm">Warden</span>
+                  <span className="text-xs text-slate-500">(Category Bound)</span>
                 </div>
               </div>
 
               {/* Mandatory Category Binding for Warden Role */}
-              {userForm.role === "warden" && (
-                <div className="p-3 rounded-lg border border-slate-300 bg-white space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                      <i className="fa-solid fa-link text-slate-600"></i> Bind Hostel Category &amp; Block
-                    </span>
-                    <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
-                      Required for Warden
-                    </span>
-                  </div>
-                  <div>
-                    <label className="block text-slate-700 font-medium mb-1">Target Category *</label>
+              <div className="p-3 rounded-lg border border-slate-300 bg-white space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                    <i className="fa-solid fa-link text-slate-600"></i> Bind Hostel Category
+                  </span>
+                  <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                    Required for Warden
+                  </span>
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-medium mb-1">Target Category *</label>
+                  {categories.length === 0 ? (
+                    <div className="p-3 rounded-lg border border-amber-300 bg-amber-50 text-amber-900 space-y-2">
+                      <div className="flex items-center gap-1.5 font-bold text-xs">
+                        <i className="fa-solid fa-triangle-exclamation text-amber-600"></i> No Hostel Categories Exist in System
+                      </div>
+                      <p className="text-[11px] text-amber-800 leading-relaxed">
+                        A warden must be assigned to an active hostel category. You must create at least one hostel category first before creating wardens.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowAddUserModal(false);
+                          setShowAddHostelModal(true);
+                        }}
+                        className="px-3 py-1.5 bg-slate-900 hover:bg-black text-white rounded text-xs font-semibold cursor-pointer flex items-center gap-1.5"
+                      >
+                        <i className="fa-solid fa-hotel text-[10px]"></i> + Add Hostel Category First
+                      </button>
+                    </div>
+                  ) : (
                     <select
                       value={userForm.assignedCategory}
                       onChange={(e) => setUserForm({ ...userForm, assignedCategory: e.target.value })}
                       className="w-full rounded border border-slate-300 text-xs py-1.5 px-2 bg-white"
+                      required
                     >
+                      <option value="" disabled>-- Select an Existing Category --</option>
                       {categories.map((c: any) => (
                         <option key={c._id} value={c.name}>
-                          {c.name} ({c.type})
+                          {c.name} ({c.type ? c.type.toUpperCase() : "GENERAL"})
                         </option>
                       ))}
-                      {categories.length === 0 && (
-                        <>
-                          <option value="Boys Hostel Category">Boys Hostel Category (बालक छात्रावास)</option>
-                          <option value="Girls Hostel Category">Girls Hostel Category (बालिका छात्रावास)</option>
-                        </>
-                      )}
                     </select>
-                  </div>
-                  <div>
-                    <label className="block text-slate-700 font-medium mb-1">Assigned Block Jurisdiction</label>
-                    <input
-                      type="text"
-                      value={userForm.assignedBlockScope}
-                      onChange={(e) => setUserForm({ ...userForm, assignedBlockScope: e.target.value })}
-                      placeholder="e.g., Block A (Kautilya Bhavan)"
-                      className="w-full rounded border border-slate-300 text-xs py-1.5 px-2 bg-white"
-                    />
-                  </div>
+                  )}
                 </div>
-              )}
+              </div>
 
               <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
                 <button
@@ -332,9 +376,165 @@ export function SuperAdminModals({
                 </button>
                 <button
                   type="submit"
+                  disabled={categories.length === 0}
+                  className={`rounded-full px-5 py-2 font-bold transition ${
+                    categories.length === 0
+                      ? "bg-slate-300 text-slate-500 cursor-not-allowed"
+                      : "bg-slate-900 text-white hover:bg-black cursor-pointer"
+                  }`}
+                >
+                  Create Warden Credentials
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT WARDEN DETAILS */}
+      {showEditUserModal && editUserForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 overflow-y-auto">
+          <div className="bg-white rounded-xl max-w-lg w-full border border-slate-300 overflow-hidden my-8 animate-scaleUp">
+            <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded bg-white border border-slate-300 text-slate-900 flex items-center justify-center font-bold text-sm">
+                  {editUserForm.role === "superadmin" ? (
+                    <i className="fa-solid fa-shield-halved"></i>
+                  ) : (
+                    <i className="fa-solid fa-user-pen"></i>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">
+                    {editUserForm.role === "superadmin" ? "Edit Administrator Profile" : "Edit Warden Profile"}
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    {editUserForm.role === "superadmin"
+                      ? "Update institutional head contact details & security credentials"
+                      : "Update warden contact, designation & category"}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowEditUserModal(false)}
+                className="text-slate-400 hover:text-slate-700 p-1 transition cursor-pointer"
+              >
+                <i className="fa-solid fa-xmark text-base"></i>
+              </button>
+            </div>
+
+            <form onSubmit={handleEditUserSubmit} className="p-5 space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">
+                  Full Name &amp; Academic Designation *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editUserForm.name}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, name: e.target.value })}
+                  className="w-full rounded-md border border-slate-300 text-xs py-2 px-3 focus:border-slate-900 focus:ring-0"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Institutional Email</label>
+                  <input
+                    type="email"
+                    disabled
+                    value={editUserForm.email}
+                    className="w-full rounded-md border border-slate-200 bg-slate-100 text-slate-500 text-xs py-2 px-3 font-mono cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Mobile Number *</label>
+                  <input
+                    type="tel"
+                    required
+                    value={editUserForm.mobile}
+                    onChange={(e) => setEditUserForm({ ...editUserForm, mobile: e.target.value })}
+                    className="w-full rounded-md border border-slate-300 text-xs font-mono py-2 px-3 focus:border-slate-900 focus:ring-0"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Designation</label>
+                <input
+                  type="text"
+                  value={editUserForm.designation || ""}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, designation: e.target.value })}
+                  className="w-full rounded-md border border-slate-300 text-xs py-2 px-3 focus:border-slate-900 focus:ring-0"
+                  placeholder="e.g., Principal / Institutional Head"
+                />
+              </div>
+
+              {/* Conditional Authority: Super Admin has campus-wide scope, Warden binds to category */}
+              {editUserForm.role === "superadmin" ? (
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
+                  <label className="block font-semibold text-slate-700">Institutional Authority Scope</label>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-white border border-slate-900 text-slate-900">
+                      <i className="fa-solid fa-shield text-[10px]"></i> Super Admin Root
+                    </span>
+                    <span className="text-xs font-semibold text-slate-800">
+                      Campus-Wide Authority (All Hostel Categories)
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500">
+                    Institutional Super Admin oversees all physical accommodation, finances, and category allocations campus-wide.
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Assigned Hostel Category *</label>
+                  {categories.length === 0 ? (
+                    <div className="p-2.5 bg-amber-50 border border-amber-200 rounded text-amber-800 text-xs">
+                      No hostel categories currently exist in the database.
+                    </div>
+                  ) : (
+                    <select
+                      value={editUserForm.assignedCategory}
+                      onChange={(e) => setEditUserForm({ ...editUserForm, assignedCategory: e.target.value })}
+                      className="w-full rounded border border-slate-300 text-xs py-2 px-3 bg-white"
+                      required
+                    >
+                      <option value="" disabled>-- Select an Existing Category --</option>
+                      {categories.map((c: any) => (
+                        <option key={c._id} value={c.name}>
+                          {c.name} ({c.type ? c.type.toUpperCase() : "GENERAL"})
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              )}
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">New Password (leave blank to keep current)</label>
+                <input
+                  type="password"
+                  placeholder="Enter at least 6 characters to reset"
+                  value={editUserForm.password || ""}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, password: e.target.value })}
+                  className="w-full rounded-md border border-slate-300 text-xs py-2 px-3 focus:border-slate-900 focus:ring-0"
+                />
+              </div>
+
+              <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowEditUserModal(false)}
+                  className="rounded-full px-4 py-2 border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
                   className="rounded-full px-5 py-2 bg-slate-900 text-white font-bold hover:bg-black transition cursor-pointer"
                 >
-                  Create User Credentials
+                  {editUserForm.role === "superadmin" ? "Save Administrator Profile" : "Save Warden Profile"}
                 </button>
               </div>
             </form>
@@ -353,7 +553,7 @@ export function SuperAdminModals({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Assign / Reassign Warden</h3>
-                  <p className="text-xs text-slate-500">Bind Warden to Category &amp; Block Scope</p>
+                  <p className="text-xs text-slate-500">Bind Warden to Hostel Category</p>
                 </div>
               </div>
               <button
@@ -377,34 +577,30 @@ export function SuperAdminModals({
 
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">Target Hostel Category *</label>
-                <select
-                  value={assignForm.targetCategory}
-                  onChange={(e) => setAssignForm({ ...assignForm, targetCategory: e.target.value })}
-                  className="w-full rounded border border-slate-300 text-xs py-2 px-3 bg-white"
-                  required
-                >
-                  {categories.map((c: any) => (
-                    <option key={c._id} value={c.name}>
-                      {c.name} ({c.type})
-                    </option>
-                  ))}
-                  {categories.length === 0 && (
-                    <>
-                      <option value="Boys Hostel Category">Boys Hostel Category (बालक छात्रावास)</option>
-                      <option value="Girls Hostel Category">Girls Hostel Category (बालिका छात्रावास)</option>
-                    </>
-                  )}
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Assigned Block Jurisdiction</label>
-                <input
-                  type="text"
-                  value={assignForm.blockScope}
-                  onChange={(e) => setAssignForm({ ...assignForm, blockScope: e.target.value })}
-                  className="w-full rounded border border-slate-300 text-xs py-2 px-3 bg-white"
-                />
+                {categories.length === 0 ? (
+                  <div className="p-3 bg-amber-50 border border-amber-200 rounded text-amber-800 text-xs space-y-1">
+                    <p className="font-bold flex items-center gap-1.5">
+                      <i className="fa-solid fa-triangle-exclamation text-amber-600"></i> No Categories Found
+                    </p>
+                    <p className="text-[11px]">
+                      No hostel categories exist in the system. Create a category before assigning a warden.
+                    </p>
+                  </div>
+                ) : (
+                  <select
+                    value={assignForm.targetCategory}
+                    onChange={(e) => setAssignForm({ ...assignForm, targetCategory: e.target.value })}
+                    className="w-full rounded border border-slate-300 text-xs py-2 px-3 bg-white"
+                    required
+                  >
+                    <option value="" disabled>-- Select an Existing Category --</option>
+                    {categories.map((c: any) => (
+                      <option key={c._id} value={c.name}>
+                        {c.name} ({c.type ? c.type.toUpperCase() : "GENERAL"})
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -440,12 +636,69 @@ export function SuperAdminModals({
                 </button>
                 <button
                   type="submit"
-                  className="rounded-full px-5 py-2 bg-slate-900 text-white font-bold hover:bg-black transition cursor-pointer"
+                  disabled={categories.length === 0}
+                  className={`rounded-full px-5 py-2 font-bold transition ${
+                    categories.length === 0
+                      ? "bg-slate-300 text-slate-500 cursor-not-allowed"
+                      : "bg-slate-900 text-white hover:bg-black cursor-pointer"
+                  }`}
                 >
                   Save Assignment
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: DELETE CONFIRMATION */}
+      {showDeleteModal && deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 overflow-y-auto">
+          <div className="bg-white rounded-xl max-w-md w-full border border-red-200 overflow-hidden my-8 animate-scaleUp p-5 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-red-50 border border-red-200 text-red-600 flex items-center justify-center text-lg flex-shrink-0">
+                <i className="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900">
+                  Delete {deleteTarget.type === "category" ? "Hostel Category" : "Warden Account"}?
+                </h3>
+                <p className="text-xs text-slate-500">This action cannot be undone.</p>
+              </div>
+            </div>
+
+            <div className="p-3 bg-red-50/50 rounded-lg border border-red-100 text-xs text-slate-700 space-y-1">
+              <p>
+                You are about to permanently delete{" "}
+                <strong className="text-slate-900 font-bold">
+                  {deleteTarget.item?.name}
+                </strong>
+                .
+              </p>
+              {deleteTarget.type === "category" && (
+                <p className="text-red-700 text-[11px]">
+                  All associated wardens assigned to this category will need reassignment.
+                </p>
+              )}
+            </div>
+
+            <div className="pt-2 flex items-center justify-end gap-2 border-t border-slate-200">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className="rounded-full px-4 py-2 border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition cursor-pointer text-xs"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                className="rounded-full px-5 py-2 bg-red-600 text-white font-bold hover:bg-red-700 transition cursor-pointer text-xs flex items-center gap-1.5"
+              >
+                <i className="fa-solid fa-trash-can text-xs"></i>
+                Confirm Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -504,6 +757,3 @@ export function SuperAdminModals({
     </>
   );
 }
-
-
-

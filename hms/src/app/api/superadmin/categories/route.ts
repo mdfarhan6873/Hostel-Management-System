@@ -47,7 +47,11 @@ export async function GET() {
       })
     );
 
-    return NextResponse.json({ success: true, hostels: enrichedHostels });
+    return NextResponse.json({ 
+      success: true, 
+      categories: enrichedHostels, 
+      hostels: enrichedHostels 
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed to fetch categories" }, { status: 500 });
   }
@@ -62,22 +66,27 @@ export async function POST(req: Request) {
 
     await connectToDatabase();
     const body = await req.json();
-    const { name, type, description } = body;
+    const { name, code, type, description } = body;
 
     if (!name || !type) {
       return NextResponse.json(
-        { error: "Hostel category name and type (boys/girls) are required" },
+        { error: "Hostel category name and demographic type (boys/girls/coed) are required" },
         { status: 400 }
       );
     }
 
     const newHostel = await Hostel.create({
       name: name.trim(),
+      code: code ? code.trim().toUpperCase() : "",
       type: type.toLowerCase(),
       description: description?.trim() || "",
     });
 
-    return NextResponse.json({ success: true, hostel: newHostel }, { status: 201 });
+    return NextResponse.json({ 
+      success: true, 
+      category: newHostel, 
+      hostel: newHostel 
+    }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed to create category" }, { status: 500 });
   }
@@ -92,7 +101,7 @@ export async function PUT(req: Request) {
 
     await connectToDatabase();
     const body = await req.json();
-    const { id, name, type, description } = body;
+    const { id, name, code, type, description } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
@@ -102,6 +111,7 @@ export async function PUT(req: Request) {
       id,
       {
         ...(name && { name: name.trim() }),
+        ...(code !== undefined && { code: code.trim().toUpperCase() }),
         ...(type && { type: type.toLowerCase() }),
         ...(description !== undefined && { description: description.trim() }),
       },
@@ -112,8 +122,50 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, hostel: updated });
+    return NextResponse.json({ 
+      success: true, 
+      category: updated, 
+      hostel: updated 
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed to update category" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const auth = await verifyAuth();
+    if (!auth || auth.role !== "superadmin") {
+      return NextResponse.json({ error: "Unauthorized access" }, { status: 403 });
+    }
+
+    await connectToDatabase();
+    const url = new URL(req.url);
+    let id = url.searchParams.get("id");
+    if (!id) {
+      try {
+        const body = await req.json();
+        id = body?.id;
+      } catch {
+        // Query param fallback
+      }
+    }
+
+    if (!id) {
+      return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
+    }
+
+    const deleted = await Hostel.findByIdAndDelete(id);
+    if (!deleted) {
+      return NextResponse.json({ error: "Category not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      message: "Hostel category deleted successfully", 
+      category: deleted 
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || "Failed to delete category" }, { status: 500 });
   }
 }

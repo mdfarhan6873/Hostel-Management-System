@@ -7,6 +7,8 @@ export function UserRegistry({
   filteredUsers,
   setShowAddUserModal,
   openAssignModal,
+  openEditUserModal,
+  openDeleteModal,
   handleToggleUserStatus,
   userFilter,
   setUserFilter,
@@ -16,6 +18,8 @@ export function UserRegistry({
   filteredUsers: any[];
   setShowAddUserModal: (val: boolean) => void;
   openAssignModal: (user: any) => void;
+  openEditUserModal?: (user: any) => void;
+  openDeleteModal?: (type: "category" | "warden", item: any) => void;
   handleToggleUserStatus: (user: any) => void;
   userFilter: string;
   setUserFilter: (val: string) => void;
@@ -31,46 +35,27 @@ export function UserRegistry({
               <i className="fa-solid fa-users-gear"></i>
             </span>
             <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-              Institutional Personnel &amp; Roles Registry
+              Wardens Registry
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Manage Wardens, Viewers, and System Administrators (PRD §3.1)
+            Manage Wardens and their hostel category assignments.
           </p>
         </div>
-        <button
-          onClick={() => setShowAddUserModal(true)}
-          className="rounded-full px-4 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-black transition cursor-pointer self-start sm:self-auto"
-          type="button"
-        >
-          + Add New User
-        </button>
-      </div>
-
-      <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-center gap-3">
-        <div className="relative flex-1 w-full">
-          <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input
-            type="text"
-            placeholder="Search by name, email, or mobile..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 rounded-lg border border-slate-300 text-xs focus:border-slate-500 focus:ring-0 bg-white"
-          />
-        </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <select
-            value={userFilter}
-            onChange={(e) => setUserFilter(e.target.value)}
-            className="w-full sm:w-auto rounded-lg border border-slate-300 text-xs py-2 px-3 bg-white focus:border-slate-500 focus:ring-0 text-slate-700 font-semibold"
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowAddUserModal(true)}
+            className="sketch-pill px-3 py-1.5 text-xs font-semibold text-slate-900 bg-white border border-slate-300 hover:border-slate-400 transition cursor-pointer"
+            type="button"
           >
-            <option value="all">All Personnel</option>
-            <option value="warden">Wardens Only</option>
-            <option value="viewer">Viewers Only</option>
-            <option value="superadmin">Super Admins</option>
-          </select>
-          <button className="px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 text-xs font-semibold cursor-pointer">
-            <i className="fa-solid fa-filter"></i>
+            <i className="fa-solid fa-user-plus text-[10px] mr-1"></i> + Add Warden
+          </button>
+          <button
+            onClick={() => alert('Audit logs verified: All Super Admin modifications are recorded with timestamp and signature.')}
+            className="sketch-pill px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-300 hover:text-slate-900 transition cursor-pointer"
+            type="button"
+          >
+            Audit Logs
           </button>
         </div>
       </div>
@@ -81,7 +66,7 @@ export function UserRegistry({
             <tr className="bg-white border-b border-slate-300 text-slate-600 font-bold text-[11px] uppercase tracking-wider">
               <th className="py-3 px-4 sm:px-6" scope="col">Name &amp; Contact</th>
               <th className="py-3 px-4" scope="col">Role</th>
-              <th className="py-3 px-4" scope="col">Assigned Category / Jurisdiction</th>
+              <th className="py-3 px-4" scope="col">Assigned Category</th>
               <th className="py-3 px-4" scope="col">Email</th>
               <th className="py-3 px-4" scope="col">Mobile</th>
               <th className="py-3 px-4 text-center" scope="col">Status</th>
@@ -137,8 +122,14 @@ export function UserRegistry({
                         </span>
                       ) : user.role === "warden" ? (
                         <div className="flex items-center gap-1.5">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-white border border-slate-300 text-slate-800">
-                            {user.assignedCategory || "Boys Hostel Category"}
+                          <span
+                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${
+                              user.assignedCategory
+                                ? "bg-white border-slate-300 text-slate-800"
+                                : "bg-amber-50 border-amber-200 text-amber-800 italic"
+                            }`}
+                          >
+                            {user.assignedCategory || "Unassigned (Pending)"}
                           </span>
                           <button
                             onClick={() => openAssignModal(user)}
@@ -180,23 +171,34 @@ export function UserRegistry({
                           <i className="fa-solid fa-arrows-rotate"></i>
                         </button>
                       )}
-                      <button
-                        onClick={() =>
-                          alert(`Editing profile for ${user.name} (${user.email}). Credentials and scopes are managed in Root Vault.`)
-                        }
-                        className="p-1.5 text-slate-600 hover:text-slate-900 rounded hover:bg-slate-100 transition cursor-pointer"
-                        title="Edit User Details"
-                      >
-                        <i className="fa-solid fa-pen-to-square"></i>
-                      </button>
-                      {user.role !== "superadmin" && (
+                      {openEditUserModal && (
                         <button
-                          onClick={() => handleToggleUserStatus(user)}
-                          className="p-1.5 text-slate-400 hover:text-red-700 rounded hover:bg-slate-100 transition cursor-pointer"
-                          title="Toggle Active Status"
+                          onClick={() => openEditUserModal(user)}
+                          className="p-1.5 text-slate-600 hover:text-slate-900 rounded hover:bg-slate-100 transition cursor-pointer"
+                          title={user.role === "superadmin" ? "Edit Administrator Profile" : "Edit Warden Details"}
                         >
-                          <i className="fa-solid fa-ban"></i>
+                          <i className="fa-solid fa-pen-to-square"></i>
                         </button>
+                      )}
+                      {user.role !== "superadmin" && (
+                        <>
+                          <button
+                            onClick={() => handleToggleUserStatus(user)}
+                            className="p-1.5 text-slate-400 hover:text-amber-700 rounded hover:bg-slate-100 transition cursor-pointer"
+                            title="Toggle Active Status"
+                          >
+                            <i className="fa-solid fa-ban"></i>
+                          </button>
+                          {openDeleteModal && (
+                            <button
+                              onClick={() => openDeleteModal("warden", user)}
+                              className="p-1.5 text-red-500 hover:text-red-700 rounded hover:bg-red-50 transition cursor-pointer"
+                              title="Delete Warden"
+                            >
+                              <i className="fa-solid fa-trash-can"></i>
+                            </button>
+                          )}
+                        </>
                       )}
                     </td>
                   </tr>

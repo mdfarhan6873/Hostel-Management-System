@@ -10,9 +10,14 @@ const HostelSchema = new Schema<IHostelDocument>(
       required: [true, "Hostel name is required"],
       trim: true,
     },
+    code: {
+      type: String,
+      trim: true,
+      uppercase: true,
+    },
     type: {
       type: String,
-      enum: ["boys", "girls"],
+      enum: ["boys", "girls", "coed"],
       required: [true, "Hostel type is required"],
     },
     description: {
@@ -24,6 +29,10 @@ const HostelSchema = new Schema<IHostelDocument>(
     timestamps: true,
   }
 );
+
+if (mongoose.models.Hostel && !mongoose.models.Hostel.schema.paths.code) {
+  delete (mongoose.models as any).Hostel;
+}
 
 export const Hostel: Model<IHostelDocument> =
   mongoose.models.Hostel || mongoose.model<IHostelDocument>("Hostel", HostelSchema);

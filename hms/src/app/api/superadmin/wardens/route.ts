@@ -121,3 +121,46 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: error.message || "Failed to update user" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const auth = await verifyAuth();
+    if (!auth || auth.role !== "superadmin") {
+      return NextResponse.json({ error: "Unauthorized access" }, { status: 403 });
+    }
+
+    await connectToDatabase();
+    const url = new URL(req.url);
+    let id = url.searchParams.get("id");
+    if (!id) {
+      try {
+        const body = await req.json();
+        id = body?.id;
+      } catch {
+        // Query param fallback
+      }
+    }
+
+    if (!id) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
+
+    const userToDelete = await User.findById(id);
+    if (!userToDelete) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (userToDelete.role === "superadmin") {
+      return NextResponse.json({ error: "Cannot delete a Super Admin account" }, { status: 400 });
+    }
+
+    await User.findByIdAndDelete(id);
+
+    return NextResponse.json({ 
+      success: true, 
+      message: "Warden account deleted successfully" 
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || "Failed to delete user" }, { status: 500 });
+  }
+}

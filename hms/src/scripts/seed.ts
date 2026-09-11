@@ -42,7 +42,7 @@ async function runSeeder() {
   const studentHash = await hashPassword("Student@123");
 
   console.log("👤 Creating Super Admin, Wardens, and Viewers...");
-  const superAdmin = await User.create({
+  const superAdmin: any = await User.create({
     name: "Dr. A. K. Sharma (Principal / Institutional Head)",
     email: "superadmin@gecmunger.ac.in",
     mobile: "+91 9431000001",
@@ -52,7 +52,7 @@ async function runSeeder() {
     status: "ACTIVE",
   });
 
-  const boysWarden = await User.create({
+  const boysWarden: any = await User.create({
     name: "Prof. R. K. Singh",
     email: "warden.boys@gecmunger.ac.in",
     mobile: "+91 9431234567",
@@ -63,7 +63,7 @@ async function runSeeder() {
     status: "ACTIVE",
   });
 
-  const girlsWarden = await User.create({
+  const girlsWarden: any = await User.create({
     name: "Dr. Neha Kumari",
     email: "warden.girls@gecmunger.ac.in",
     mobile: "+91 9123456780",
@@ -95,51 +95,51 @@ async function runSeeder() {
   });
 
   console.log("🏢 Creating Hostel Categories...");
-  const boysHostel = await Hostel.create({
+  const boysHostel: any = await Hostel.create({
     name: "Boys Hostel Category",
     type: "boys",
     description: "Code: BH-GEC-MGR • Haveli Kharagpur Permanent Campus residential complex for male engineering undergraduates.",
   });
 
-  const girlsHostel = await Hostel.create({
+  const girlsHostel: any = await Hostel.create({
     name: "Girls Hostel Category",
     type: "girls",
     description: "Code: GH-GEC-MGR • Secure Campus Residential Enclave for female engineering undergraduates with 24x7 security.",
   });
 
   console.log("🏗️ Creating Blocks & Floors...");
-  const blockA = await Block.create({
+  const blockA: any = await Block.create({
     name: "Block A (Aryabhata Wing)",
     hostelId: boysHostel._id,
     wardenId: boysWarden._id,
   });
 
-  const blockB = await Block.create({
+  const blockB: any = await Block.create({
     name: "Block B (Chanakya Wing)",
     hostelId: boysHostel._id,
     wardenId: boysWarden._id,
   });
 
-  const blockG = await Block.create({
+  const blockG: any = await Block.create({
     name: "Block A (Gargi Wing)",
     hostelId: girlsHostel._id,
     wardenId: girlsWarden._id,
   });
 
-  const groundFloorA = await Floor.create({
+  const groundFloorA: any = await Floor.create({
     name: "Ground Floor",
     floorNumber: 0,
     blockId: blockA._id,
   });
 
-  const firstFloorA = await Floor.create({
+  const firstFloorA: any = await Floor.create({
     name: "First Floor",
     floorNumber: 1,
     blockId: blockA._id,
   });
 
   console.log("🛏️ Creating Rooms with sequential Furniture Groups (Bed/Table/Chair IDs)...");
-  const room101 = await Room.create({
+  const room101: any = await Room.create({
     roomNumber: "101",
     floorId: groundFloorA._id,
     blockId: blockA._id,
@@ -164,7 +164,7 @@ async function runSeeder() {
     ],
   });
 
-  const room102 = await Room.create({
+  const room102: any = await Room.create({
     roomNumber: "102",
     floorId: groundFloorA._id,
     blockId: blockA._id,
@@ -189,7 +189,7 @@ async function runSeeder() {
     ],
   });
 
-  const room103 = await Room.create({
+  const room103: any = await Room.create({
     roomNumber: "103",
     floorId: groundFloorA._id,
     blockId: blockA._id,
@@ -223,7 +223,7 @@ async function runSeeder() {
 
   console.log("🎓 Creating Students across all Lifecycle states...");
   // Student 1: ALLOTTED
-  const student1 = await Student.create({
+  const student1: any = await Student.create({
     fullName: "Md Farhan Naiyyar",
     email: "student@gecmunger.ac.in",
     mobile: "+91 7004123456",
@@ -253,7 +253,7 @@ async function runSeeder() {
   });
 
   // Student 2: ALLOTTED
-  const student2 = await Student.create({
+  const student2: any = await Student.create({
     fullName: "Rahul Kumar Singh",
     email: "rahul.cse@gecmunger.ac.in",
     mobile: "+91 8210987654",
@@ -296,7 +296,7 @@ async function runSeeder() {
   room101.furnitureGroups[1].occupiedStudentRoll = student2.rollNo;
   room101.furnitureGroups[1].occupiedStudentBranch = student2.branch;
   room101.furnitureGroups[1].occupiedStudentSession = student2.session;
-  await room101.save();
+  await room101?.save?.();
 
   // Student 3: WAITING
   await Student.create({
