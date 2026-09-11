@@ -120,6 +120,51 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, room: newRoom }, { status: 201 });
     }
 
+    // Action: CREATE_BLOCK (Warden creates a new block in their hostel category)
+    if (action === "CREATE_BLOCK") {
+      const { name, hostelId } = body;
+      if (!name) {
+        return NextResponse.json({ error: "Block name is required" }, { status: 400 });
+      }
+
+      let targetHostelId = hostelId;
+      if (!targetHostelId) {
+        const warden = await User.findById(auth.userId).lean();
+        if (warden?.assignedCategory) {
+          const cat = await Hostel.findOne({ name: warden.assignedCategory }).lean();
+          if (cat) targetHostelId = cat._id;
+        }
+      }
+      if (!targetHostelId) {
+        const firstHostel = await Hostel.findOne().lean();
+        if (firstHostel) targetHostelId = firstHostel._id;
+      }
+
+      const newBlock = await Block.create({
+        name: name.trim(),
+        hostelId: targetHostelId,
+        wardenId: auth.userId,
+      });
+
+      return NextResponse.json({ success: true, block: newBlock }, { status: 201 });
+    }
+
+    // Action: CREATE_FLOOR (Warden creates a floor in a block)
+    if (action === "CREATE_FLOOR") {
+      const { name, floorNumber, blockId } = body;
+      if (!name || floorNumber === undefined || !blockId) {
+        return NextResponse.json({ error: "Floor name, number, and block ID are required" }, { status: 400 });
+      }
+
+      const newFloor = await Floor.create({
+        name: name.trim(),
+        floorNumber: Number(floorNumber),
+        blockId,
+      });
+
+      return NextResponse.json({ success: true, floor: newFloor }, { status: 201 });
+    }
+
     // Action: UPDATE_FURNITURE_IDS
     if (action === "UPDATE_FURNITURE") {
       const { roomId, groupIndex, bedId, tableId, chairId } = body;
@@ -141,3 +186,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message || "Operation failed" }, { status: 500 });
   }
 }
+
