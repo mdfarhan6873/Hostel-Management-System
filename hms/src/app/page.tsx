@@ -31,10 +31,10 @@ export default function HomePage() {
         if (data && data.authenticated && data.user) {
           const target =
             data.user.role === "superadmin"
-              ? "/superadmin"
+              ? "/Dashboard/Admin"
               : data.user.role === "warden"
-                ? "/warden"
-                : "/student";
+                ? "/Dashboard/Warden"
+                : "/Dashboard/Student";
           router.push(target);
         }
       })

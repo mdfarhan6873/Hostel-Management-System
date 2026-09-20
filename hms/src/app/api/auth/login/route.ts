@@ -66,7 +66,7 @@ export async function POST(req: Request) {
           assignedRoom: student.roomId,
           bedId: student.assignedBedId,
         },
-        redirectUrl: "/student",
+        redirectUrl: "/Dashboard/Student",
       });
 
       response.cookies.set({
@@ -107,7 +107,7 @@ export async function POST(req: Request) {
         assignedCategory: user.assignedCategory,
       });
 
-      const redirectUrl = user.role === "superadmin" ? "/superadmin" : "/warden";
+      const redirectUrl = user.role === "superadmin" ? "/Dashboard/Admin" : "/Dashboard/Warden";
 
       const response = NextResponse.json({
         success: true,
