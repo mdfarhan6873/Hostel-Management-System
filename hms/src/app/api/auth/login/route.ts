@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   try {
     await connectToDatabase();
     const body = await req.json();
-    const { email, password, role } = body;
+    const { email, password } = body;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -18,16 +18,9 @@ export async function POST(req: Request) {
 
     const cleanEmail = String(email).trim().toLowerCase();
 
-    // 1. Student Login
-    if (role === "student") {
-      const student = await Student.findOne({ email: cleanEmail });
-      if (!student) {
-        return NextResponse.json(
-          { error: "No student account found with this email." },
-          { status: 401 }
-        );
-      }
-
+    // 1. Try to find a Student
+    const student = await Student.findOne({ email: cleanEmail });
+    if (student) {
       if (!student.password) {
         return NextResponse.json(
           { error: "Password not set for this account. Contact administration." },
@@ -88,62 +81,63 @@ export async function POST(req: Request) {
       return response;
     }
 
-    // 2. Admin Login (Super Admin or Warden)
+    // 2. Try to find an Admin (Super Admin or Warden)
     const user = await User.findOne({ email: cleanEmail });
-    if (!user) {
-      return NextResponse.json(
-        { error: "No administrator or warden account found with this email." },
-        { status: 401 }
-      );
-    }
+    if (user) {
+      if (!user.password) {
+        return NextResponse.json(
+          { error: "Password not set for this account. Contact administration." },
+          { status: 401 }
+        );
+      }
 
-    if (!user.password) {
-      return NextResponse.json(
-        { error: "Password not set for this account. Contact administration." },
-        { status: 401 }
-      );
-    }
+      const isValidPassword = await comparePassword(password, user.password);
+      if (!isValidPassword) {
+        return NextResponse.json(
+          { error: "Invalid password. Please try again." },
+          { status: 401 }
+        );
+      }
 
-    const isValidPassword = await comparePassword(password, user.password);
-    if (!isValidPassword) {
-      return NextResponse.json(
-        { error: "Invalid password. Please try again." },
-        { status: 401 }
-      );
-    }
-
-    const token = signToken({
-      id: user._id.toString(),
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      assignedCategory: user.assignedCategory,
-    });
-
-    const redirectUrl = user.role === "superadmin" ? "/superadmin" : "/warden";
-
-    const response = NextResponse.json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
+      const token = signToken({
+        id: user._id.toString(),
         email: user.email,
+        name: user.name,
         role: user.role,
         assignedCategory: user.assignedCategory,
-      },
-      redirectUrl,
-    });
+      });
 
-    response.cookies.set({
-      name: AUTH_COOKIE_NAME,
-      value: token,
-      httpOnly: true,
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      sameSite: "lax",
-    });
+      const redirectUrl = user.role === "superadmin" ? "/superadmin" : "/warden";
 
-    return response;
+      const response = NextResponse.json({
+        success: true,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          assignedCategory: user.assignedCategory,
+        },
+        redirectUrl,
+      });
+
+      response.cookies.set({
+        name: AUTH_COOKIE_NAME,
+        value: token,
+        httpOnly: true,
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        sameSite: "lax",
+      });
+
+      return response;
+    }
+
+    // If neither student nor admin found
+    return NextResponse.json(
+      { error: "No account found with this email." },
+      { status: 401 }
+    );
   } catch (error: any) {
     console.error("Login Error:", error);
     return NextResponse.json(

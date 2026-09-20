@@ -226,62 +226,6 @@ export function BlueprintManager(props: any) {
           </div>
         </div>
 
-        {/* Priority Queue Pool Banner */}
-        <div className="p-3.5 bg-amber-50/60 border border-amber-200 rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded bg-amber-100 border border-amber-300 flex items-center justify-center flex-shrink-0 text-amber-900 text-sm">
-              <i className="fa-solid fa-hourglass-half"></i>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold uppercase tracking-wider text-amber-900 bg-amber-100 px-1.5 py-0.5 rounded text-[10px]">
-                  Priority Queue Pool
-                </span>
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                  Next in Line: Manish Kumar (23ME058)
-                </h3>
-                <span className="font-mono text-[11px] bg-white border border-amber-200 px-1.5 py-0.5 rounded text-slate-800 font-semibold">
-                  85 km • CGPA 8.82
-                </span>
-              </div>
-              <p className="text-xs text-slate-600 mt-0.5">
-                Eligible for Room 205 (Slot B) • Furniture:{" "}
-                <span className="font-mono text-[11px] text-slate-900 font-medium">
-                  BED-BA-205-B, TBL-BA-205-B, CHR-BA-205-B
-                </span>
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 self-start md:self-auto">
-            <button
-              type="button"
-              onClick={() => setShowAddStudentModal(true)}
-              className="px-3 py-1.5 bg-white border border-slate-300 rounded text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-1 cursor-pointer"
-            >
-              <i className="fa-solid fa-user-plus text-[10px]"></i>
-              <span>+ New Applicant Form</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setAllotTargetCandidate({
-                  name: "Manish Kumar",
-                  rollNo: "23ME058",
-                  roomSlot: "205-B",
-                  distance: "85 km (Purnia)",
-                  cgpa: "8.82",
-                });
-                setShowAllotmentModal(true);
-              }}
-              className="px-3 py-1.5 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800 flex items-center gap-1 cursor-pointer"
-            >
-              <i className="fa-solid fa-check text-[10px]"></i>
-              <span>Allot to Room 205-B</span>
-            </button>
-          </div>
-        </div>
-
         {/* Room Matrix Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Room 201 */}

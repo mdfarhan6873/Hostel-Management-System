@@ -114,7 +114,12 @@ export function WardenModals(props: any) {
 
   return (
     <>
-      {showAllotmentModal && (
+      {showAllotmentModal && (() => {
+        const [allotMode, setAllotMode] = React.useState<"waiting" | "reallocate">("waiting");
+        const waitingStudentsList = students.filter((s: any) => s.status === "WAITING" || s.status === "waiting");
+        const allottedStudentsList = students.filter((s: any) => s.status === "ALLOTTED" || s.status === "allotted" || s.status === "ACTIVE" || s.status === "active");
+
+        return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 overflow-y-auto">
           <div className="w-full max-w-2xl bg-white border border-slate-300 rounded-lg p-6 space-y-4 animate-scaleUp">
             <div className="flex items-start justify-between border-b border-slate-200 pb-3">
@@ -123,11 +128,10 @@ export function WardenModals(props: any) {
                   Formal Assignment Flow
                 </span>
                 <h3 className="text-base font-bold text-slate-900 mt-1">
-                  Manual Resident Room Allotment
+                  Room Allotment &amp; Reallocation
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Assigning waiting applicant to designated vacant bed slot •
-                  PRD §3.2
+                  Assign waiting students or reallocate existing residents to a new room
                 </p>
               </div>
               <button
@@ -138,34 +142,146 @@ export function WardenModals(props: any) {
               </button>
             </div>
 
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded text-xs">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
-                Target Candidate (Waiting Queue Verification)
+            {/* Mode Toggle Tabs */}
+            <div className="flex gap-0 border border-slate-200 rounded-lg overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setAllotMode("waiting")}
+                className={`flex-1 px-4 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                  allotMode === "waiting"
+                    ? "bg-slate-900 text-white"
+                    : "bg-white text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                <i className="fa-solid fa-user-clock text-[10px]"></i>
+                New Allotment (Waiting Student)
+              </button>
+              <button
+                type="button"
+                onClick={() => setAllotMode("reallocate")}
+                className={`flex-1 px-4 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                  allotMode === "reallocate"
+                    ? "bg-amber-600 text-white"
+                    : "bg-white text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                <i className="fa-solid fa-arrows-rotate text-[10px]"></i>
+                Reallocation (Already Allotted)
+              </button>
+            </div>
+
+            {/* Student Selector */}
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded text-xs space-y-2">
+              <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                {allotMode === "waiting"
+                  ? "Select Waiting Student"
+                  : "Select Allotted Student to Reallocate"}
               </span>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">
-                    {allotTargetCandidate.name}
-                  </h4>
-                  <p className="text-slate-500 text-[11px]">
-                    Roll No:{" "}
-                    <span className="font-mono font-bold text-slate-800">
-                      {allotTargetCandidate.rollNo}
-                    </span>{" "}
-                    • Verified Waiting Candidate (
-                    {allotTargetCandidate.distance || "85 km"})
-                  </p>
+
+              {allotMode === "waiting" ? (
+                <>
+                  {waitingStudentsList.length > 0 ? (
+                    <select
+                      value={allotTargetCandidate.rollNo || ""}
+                      onChange={(e) => {
+                        const selected = waitingStudentsList.find((s: any) => (s.rollNumber || s.rollNo) === e.target.value);
+                        if (selected) {
+                          setAllotTargetCandidate({
+                            name: selected.name,
+                            rollNo: selected.rollNumber || selected.rollNo,
+                            roomSlot: allotTargetCandidate.roomSlot || "205-B",
+                            distance: selected.distance || "",
+                            cgpa: selected.cgpa || "",
+                          });
+                        }
+                      }}
+                      className="w-full py-2 px-3 bg-white border border-slate-300 rounded text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
+                    >
+                      <option value="">-- Choose a waiting student --</option>
+                      {waitingStudentsList.map((s: any) => (
+                        <option key={s._id || s.rollNumber || s.rollNo} value={s.rollNumber || s.rollNo}>
+                          {s.name} — {s.rollNumber || s.rollNo} {s.branch ? `(${s.branch})` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="text-center py-4 text-slate-400">
+                      <i className="fa-solid fa-inbox text-lg mb-1 block"></i>
+                      <p className="font-semibold">No waiting students in the queue</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {allottedStudentsList.length > 0 ? (
+                    <select
+                      value={allotTargetCandidate.rollNo || ""}
+                      onChange={(e) => {
+                        const selected = allottedStudentsList.find((s: any) => (s.rollNumber || s.rollNo) === e.target.value);
+                        if (selected) {
+                          setAllotTargetCandidate({
+                            name: selected.name,
+                            rollNo: selected.rollNumber || selected.rollNo,
+                            roomSlot: allotTargetCandidate.roomSlot || "205-B",
+                            distance: selected.distance || "",
+                            cgpa: selected.cgpa || "",
+                            currentRoom: selected.roomNumber || selected.currentRoom || "",
+                          });
+                        }
+                      }}
+                      className="w-full py-2 px-3 bg-white border border-slate-300 rounded text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-300"
+                    >
+                      <option value="">-- Choose an allotted student --</option>
+                      {allottedStudentsList.map((s: any) => (
+                        <option key={s._id || s.rollNumber || s.rollNo} value={s.rollNumber || s.rollNo}>
+                          {s.name} — {s.rollNumber || s.rollNo} {s.roomNumber ? `(Room ${s.roomNumber})` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="text-center py-4 text-slate-400">
+                      <i className="fa-solid fa-inbox text-lg mb-1 block"></i>
+                      <p className="font-semibold">No allotted students to reallocate</p>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Selected student card */}
+              {allotTargetCandidate.name && (
+                <div className="flex items-center justify-between mt-2 p-2.5 bg-white border border-slate-200 rounded-md">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">
+                      {allotTargetCandidate.name}
+                    </h4>
+                    <p className="text-slate-500 text-[11px]">
+                      Roll No:{" "}
+                      <span className="font-mono font-bold text-slate-800">
+                        {allotTargetCandidate.rollNo}
+                      </span>
+                      {allotTargetCandidate.distance && (
+                        <> • {allotTargetCandidate.distance}</>
+                      )}
+                      {allotTargetCandidate.currentRoom && allotMode === "reallocate" && (
+                        <> • Current: <span className="font-mono font-bold text-amber-700">Room {allotTargetCandidate.currentRoom}</span></>
+                      )}
+                    </p>
+                  </div>
+                  <span className={`px-2 py-0.5 border rounded text-[10px] font-bold ${
+                    allotMode === "waiting"
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                      : "bg-amber-50 text-amber-800 border-amber-300"
+                  }`}>
+                    {allotMode === "waiting" ? "Verified Eligible" : "Reallocation"}
+                  </span>
                 </div>
-                <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded text-[10px] font-bold">
-                  Verified Eligible
-                </span>
-              </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
                 <label className="font-semibold text-slate-700 uppercase tracking-wider block mb-1">
-                  Target Accommodation Slot
+                  {allotMode === "waiting" ? "Target Accommodation Slot" : "New Room Assignment"}
                 </label>
                 <select
                   value={allotTargetCandidate.roomSlot}
@@ -177,18 +293,29 @@ export function WardenModals(props: any) {
                   }
                   className="w-full py-1.5 px-2.5 bg-white border border-slate-300 rounded font-mono text-slate-900 focus:outline-none"
                 >
-                  <option value="205-B">
-                    Room 205 (Block A) — Bed Slot B (Vacant)
-                  </option>
-                  <option value="213-A">
-                    Room 213 (Block A) — Bed Slot A (Vacant)
-                  </option>
-                  <option value="219-A">
-                    Room 219 (Block A) — Bed Slot A (Vacant)
-                  </option>
-                  <option value="220-A">
-                    Room 220 (Block A) — Bed Slot A (Vacant)
-                  </option>
+                  {rooms.filter((r: any) => {
+                    const occupied = r.occupiedBeds || 0;
+                    const capacity = r.capacity || 0;
+                    return occupied < capacity;
+                  }).length > 0 ? (
+                    rooms
+                      .filter((r: any) => {
+                        const occupied = r.occupiedBeds || 0;
+                        const capacity = r.capacity || 0;
+                        return occupied < capacity;
+                      })
+                      .map((r: any) => (
+                        <option key={r._id} value={`${r.roomNumber}-${String.fromCharCode(65 + (r.occupiedBeds || 0))}`}>
+                          Room {r.roomNumber} — Bed Slot {String.fromCharCode(65 + (r.occupiedBeds || 0))} (Vacant)
+                        </option>
+                      ))
+                  ) : (
+                    <>
+                      <option value="205-B">Room 205 (Block A) — Bed Slot B (Vacant)</option>
+                      <option value="213-A">Room 213 (Block A) — Bed Slot A (Vacant)</option>
+                      <option value="219-A">Room 219 (Block A) — Bed Slot A (Vacant)</option>
+                    </>
+                  )}
                 </select>
               </div>
 
@@ -258,15 +385,25 @@ export function WardenModals(props: any) {
               <button
                 type="button"
                 onClick={handleFormalAllotment}
-                className="px-4 py-1.5 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800 transition flex items-center gap-1.5 cursor-pointer"
+                className={`px-4 py-1.5 text-white rounded text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  allotMode === "waiting"
+                    ? "bg-slate-900 hover:bg-slate-800"
+                    : "bg-amber-600 hover:bg-amber-700"
+                }`}
               >
                 <i className="fa-solid fa-circle-check text-xs"></i>
-                <span>Confirm &amp; Generate Allotment Memo</span>
+                <span>
+                  {allotMode === "waiting"
+                    ? "Confirm & Generate Allotment Memo"
+                    : "Confirm Reallocation & Update Records"}
+                </span>
               </button>
             </div>
           </div>
         </div>
-      )}
+        );
+      })()}
+
 
       {showAddStudentModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4 overflow-y-auto">
