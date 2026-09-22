@@ -1020,7 +1020,7 @@ export default function HomePage() {
             <div className="flex items-center space-x-1.5 text-slate-400">
               <span>{curr.footer.developedBy}</span>
               <a
-                href="https://foundation.nextodyssey.space"
+                href="https://nextodyssey.space"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-amber-300 hover:text-amber-200 font-bold underline decoration-amber-500/40 hover:decoration-amber-300 transition-colors inline-flex items-center group ml-0.5"
