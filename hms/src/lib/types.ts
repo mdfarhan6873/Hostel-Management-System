@@ -72,17 +72,29 @@ export interface IStudent {
   updatedAt?: Date;
 }
 
+export interface ICustomAsset {
+  name: string;
+  number: string;
+  isAvailable?: boolean;
+}
+
 export interface IFurnitureGroup {
+  _id?: string;
   groupName: string; // e.g. "Group A", "Group B"
   bedId?: string;    // e.g. "BED-101-A"
+  bedAvailable?: boolean; // default true
   tableId?: string;  // e.g. "TAB-101-A"
+  tableAvailable?: boolean; // default true
   chairId?: string;  // e.g. "CHR-101-A"
+  chairAvailable?: boolean; // default true
+  customAssets?: ICustomAsset[]; // e.g. [{ name: "Almirah", number: "ALM-101-A", isAvailable: true }]
   isOccupied?: boolean;
   occupiedBy?: string; // studentId
   occupiedStudentName?: string;
   occupiedStudentRoll?: string;
   occupiedStudentBranch?: string;
   occupiedStudentSession?: string;
+  groupStatus?: "AVAILABLE" | "ASSET_UNAVAILABLE" | "MAINTENANCE";
 }
 
 export interface IRoom {

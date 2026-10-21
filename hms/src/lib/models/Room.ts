@@ -9,14 +9,29 @@ const FurnitureGroupSchema = new Schema(
   {
     groupName: { type: String, required: true }, // e.g. "Group A", "Group B"
     bedId: { type: String, trim: true },
+    bedAvailable: { type: Boolean, default: true },
     tableId: { type: String, trim: true },
+    tableAvailable: { type: Boolean, default: true },
     chairId: { type: String, trim: true },
+    chairAvailable: { type: Boolean, default: true },
+    customAssets: [
+      {
+        name: { type: String, required: true, trim: true },
+        number: { type: String, trim: true },
+        isAvailable: { type: Boolean, default: true },
+      },
+    ],
     isOccupied: { type: Boolean, default: false },
     occupiedBy: { type: Schema.Types.ObjectId, ref: "Student" },
     occupiedStudentName: { type: String, trim: true },
     occupiedStudentRoll: { type: String, trim: true },
     occupiedStudentBranch: { type: String, trim: true },
     occupiedStudentSession: { type: String, trim: true },
+    groupStatus: {
+      type: String,
+      enum: ["AVAILABLE", "ASSET_UNAVAILABLE", "MAINTENANCE"],
+      default: "AVAILABLE",
+    },
   },
   { _id: true }
 );
@@ -61,6 +76,10 @@ const RoomSchema = new Schema<IRoomDocument>(
     timestamps: true,
   }
 );
+
+if (mongoose.models.Room && !mongoose.models.Room.schema.paths["furnitureGroups.customAssets"]) {
+  delete (mongoose.models as any).Room;
+}
 
 export const Room: Model<IRoomDocument> =
   mongoose.models.Room || mongoose.model<IRoomDocument>("Room", RoomSchema);

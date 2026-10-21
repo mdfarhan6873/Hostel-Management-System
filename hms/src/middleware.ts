@@ -70,13 +70,13 @@ export async function middleware(request: NextRequest) {
   if (pathname === "/" || pathname === "/login") {
     if (isAuthenticated && role) {
       if (role === "superadmin") {
-        return createRedirect("/superadmin");
+        return createRedirect("/Dashboard/Admin");
       }
       if (role === "warden") {
-        return createRedirect("/warden");
+        return createRedirect("/Dashboard/Warden");
       }
       if (role === "student") {
-        return createRedirect("/student");
+        return createRedirect("/Dashboard/Student");
       }
     }
     // If not authenticated, allow viewing landing page
@@ -86,36 +86,46 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. PROTECTED ROUTE: /superadmin/*
-  if (pathname.startsWith("/superadmin")) {
+  // Legacy route redirects
+  if (pathname === "/superadmin" || pathname.startsWith("/superadmin/")) {
+    return createRedirect("/Dashboard/Admin");
+  }
+  if (pathname === "/warden" || pathname.startsWith("/warden/")) {
+    return createRedirect("/Dashboard/Warden");
+  }
+  if (pathname === "/student" || pathname.startsWith("/student/")) {
+    return createRedirect("/Dashboard/Student");
+  }
+
+  // 2. PROTECTED ROUTE: /Dashboard/Admin/*
+  if (pathname.startsWith("/Dashboard/Admin")) {
     if (!isAuthenticated) {
       return createRedirect("/");
     }
     if (role !== "superadmin") {
-      // Redirect to user's permitted dashboard
-      return createRedirect(role === "warden" ? "/warden" : "/student");
+      return createRedirect(role === "warden" ? "/Dashboard/Warden" : "/Dashboard/Student");
     }
     return NextResponse.next();
   }
 
-  // 3. PROTECTED ROUTE: /warden/*
-  if (pathname.startsWith("/warden")) {
+  // 3. PROTECTED ROUTE: /Dashboard/Warden/*
+  if (pathname.startsWith("/Dashboard/Warden")) {
     if (!isAuthenticated) {
       return createRedirect("/");
     }
     if (role !== "warden" && role !== "superadmin") {
-      return createRedirect("/student");
+      return createRedirect("/Dashboard/Student");
     }
     return NextResponse.next();
   }
 
-  // 4. PROTECTED ROUTE: /student/*
-  if (pathname.startsWith("/student")) {
+  // 4. PROTECTED ROUTE: /Dashboard/Student/*
+  if (pathname.startsWith("/Dashboard/Student")) {
     if (!isAuthenticated) {
       return createRedirect("/");
     }
     if (role !== "student") {
-      return createRedirect(role === "superadmin" ? "/superadmin" : "/warden");
+      return createRedirect(role === "superadmin" ? "/Dashboard/Admin" : "/Dashboard/Warden");
     }
     return NextResponse.next();
   }
