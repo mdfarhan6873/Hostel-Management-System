@@ -7,3 +7,5 @@ export * from "./Room";
 export * from "./Bill";
 export * from "./LeaveRequest";
 export * from "./AdmissionNotice";
+export * from "./CustomForm";
+export * from "./FormResponse";

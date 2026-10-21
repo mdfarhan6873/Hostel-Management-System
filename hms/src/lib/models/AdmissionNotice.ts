@@ -17,7 +17,7 @@ const AdmissionNoticeSchema = new Schema<IAdmissionNoticeDocument>(
     },
     category: {
       type: String,
-      enum: ["ADMISSION", "CIRCULAR", "BLUEPRINT", "REBATE"],
+      enum: ["ADMISSION", "CIRCULAR", "BLUEPRINT", "REBATE", "MAINTENANCE", "GENERAL"],
       default: "CIRCULAR",
     },
     refNumber: {
@@ -33,11 +33,22 @@ const AdmissionNoticeSchema = new Schema<IAdmissionNoticeDocument>(
       {
         label: { type: String, required: true },
         url: { type: String, required: true },
+        isFormLink: { type: Boolean, default: false },
+        formId: { type: String },
       },
     ],
+    visibility: {
+      type: String,
+      enum: ["PUBLIC", "ENROLLED_STUDENTS", "ALLOTTED_STUDENTS"],
+      default: "PUBLIC",
+    },
     isActive: {
       type: Boolean,
       default: true,
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {

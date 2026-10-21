@@ -48,6 +48,24 @@ export default function WardenSidebar() {
             ></i>
             <span className="text-[14px]">Hostel Blueprint</span>
           </Link>
+
+          <Link
+            href="/Dashboard/Warden/forms-notices"
+            className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${
+              pathname.startsWith("/Dashboard/Warden/forms-notices")
+                ? "text-gray-900 font-bold bg-gray-50/80"
+                : "text-gray-500 hover:text-gray-900 font-medium hover:bg-gray-50/50"
+            }`}
+          >
+            <i
+              className={`fa-solid fa-clipboard-list w-5 text-center text-sm ${
+                pathname.startsWith("/Dashboard/Warden/forms-notices")
+                  ? "text-blue-600"
+                  : "text-gray-400"
+              }`}
+            ></i>
+            <span className="text-[14px]">Forms & Notices</span>
+          </Link>
         </nav>
       </div>
     </aside>

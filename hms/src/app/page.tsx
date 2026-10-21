@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 import { useToast } from "@/components/ui/ToastContext";
+import DynamicFormModal from "@/components/forms/DynamicFormModal";
+import { ICustomForm, IAdmissionNotice } from "@/lib/types";
 
 type Language = "hi" | "en";
 type UserRole = "student" | "admin";
@@ -18,6 +20,12 @@ export default function HomePage() {
   const [fontSizeOffset, setFontSizeOffset] = useState<number>(0);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+
+  // Live public forms & notices state
+  const [publicNotices, setPublicNotices] = useState<IAdmissionNotice[]>([]);
+  const [publicForms, setPublicForms] = useState<ICustomForm[]>([]);
+  const [selectedFormForModal, setSelectedFormForModal] = useState<ICustomForm | null>(null);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   useEffect(() => {
     // Client-side authentication check: redirect active sessions to their respective dashboard
@@ -36,6 +44,21 @@ export default function HomePage() {
                 ? "/Dashboard/Warden"
                 : "/Dashboard/Student";
           router.push(target);
+        }
+      })
+      .catch(() => { });
+
+    // Fetch live public notices and active forms
+    fetch("/api/public/notices-and-forms")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success) {
+          if (Array.isArray(data.notices) && data.notices.length > 0) {
+            setPublicNotices(data.notices);
+          }
+          if (Array.isArray(data.forms) && data.forms.length > 0) {
+            setPublicForms(data.forms);
+          }
         }
       })
       .catch(() => { });
@@ -675,51 +698,165 @@ export default function HomePage() {
 
                 {/* Notice List */}
                 <div className="divide-y divide-slate-100 max-h-[260px] sm:max-h-[290px] overflow-y-auto custom-scrollbar">
-                  {curr.hero.notices.map((notice, idx) => (
-                    <div
-                      key={idx}
-                      className="p-3 sm:p-3.5 hover:bg-blue-50/70 transition-colors flex items-start space-x-3 group"
-                    >
-                      <div className="flex-shrink-0 text-center rounded-lg overflow-hidden w-11 shadow-xs border border-slate-200">
-                        <span className="block text-[9px] font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 to-red-700 text-white py-0.5">
-                          {notice.month}
-                        </span>
-                        <span className="block text-sm sm:text-base font-black leading-none py-1 bg-white text-slate-900">
-                          {notice.day}
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-1.5 flex-wrap gap-y-0.5">
-                          <span
-                            className={`${notice.badgeColor} text-white text-[9px] font-bold px-1.5 py-0.2 rounded uppercase shadow-2xs`}
+                  {publicForms.length > 0 || publicNotices.length > 0 ? (
+                    <>
+                      {/* Active Public Forms */}
+                      {publicForms.map((form) => {
+                        const sDate = new Date(form.startDate);
+                        const month = sDate.toLocaleString("default", { month: "short" }).toUpperCase();
+                        const day = sDate.getDate();
+
+                        return (
+                          <div
+                            key={form._id}
+                            className="p-3 sm:p-3.5 hover:bg-blue-50/70 transition-colors flex items-start space-x-3 group"
                           >
-                            {notice.badge}
+                            <div className="flex-shrink-0 text-center rounded-lg overflow-hidden w-11 shadow-xs border border-slate-200">
+                              <span className="block text-[9px] font-extrabold uppercase tracking-wide bg-gradient-to-r from-blue-700 to-indigo-800 text-white py-0.5">
+                                {month}
+                              </span>
+                              <span className="block text-sm sm:text-base font-black leading-none py-1 bg-white text-slate-900">
+                                {day}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center space-x-1.5 flex-wrap gap-y-0.5">
+                                <span className="bg-blue-700 text-white text-[9px] font-bold px-1.5 py-0.2 rounded uppercase shadow-2xs">
+                                  ONLINE FORM &bull; {form.formType}
+                                </span>
+                                <span className="text-[10px] font-semibold text-slate-500">
+                                  Deadline: {new Date(form.endDate).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-800 mt-0.5 leading-snug">
+                                {form.title}
+                              </h4>
+                              {form.description && (
+                                <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed line-clamp-2">
+                                  {form.description}
+                                </p>
+                              )}
+                              <div className="flex flex-wrap items-center gap-1.5 mt-1.5 pt-1 border-t border-slate-100 text-[11px] font-semibold">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedFormForModal(form);
+                                    setIsFormModalOpen(true);
+                                  }}
+                                  className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] sm:text-[11px] font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-2xs hover:shadow-xs transition-all gap-1.5"
+                                >
+                                  <i className="fa-solid fa-file-signature text-[10px]"></i>
+                                  <span>Apply Online / Fill Form</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {/* Active Public Notices */}
+                      {publicNotices.map((notice) => {
+                        const pDate = new Date(notice.publishDate);
+                        const month = pDate.toLocaleString("default", { month: "short" }).toUpperCase();
+                        const day = pDate.getDate();
+
+                        return (
+                          <div
+                            key={notice._id}
+                            className="p-3 sm:p-3.5 hover:bg-blue-50/70 transition-colors flex items-start space-x-3 group"
+                          >
+                            <div className="flex-shrink-0 text-center rounded-lg overflow-hidden w-11 shadow-xs border border-slate-200">
+                              <span className="block text-[9px] font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 to-red-700 text-white py-0.5">
+                                {month}
+                              </span>
+                              <span className="block text-sm sm:text-base font-black leading-none py-1 bg-white text-slate-900">
+                                {day}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center space-x-1.5 flex-wrap gap-y-0.5">
+                                <span className="bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded uppercase shadow-2xs">
+                                  {notice.category}
+                                </span>
+                                <span className="text-[10px] font-semibold text-slate-500">
+                                  {notice.refNumber}
+                                </span>
+                              </div>
+                              <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-800 mt-0.5 leading-snug">
+                                {notice.title}
+                              </h4>
+                              <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed line-clamp-2">
+                                {notice.description}
+                              </p>
+                              {(notice.pdfLinks || []).length > 0 && (
+                                <div className="flex flex-wrap items-center gap-1.5 mt-1.5 pt-1 border-t border-slate-100 text-[11px] font-semibold">
+                                  {notice.pdfLinks.map((link, lIdx) => (
+                                    <a
+                                      key={lIdx}
+                                      href={link.url}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="inline-flex items-center px-2 py-0.5 rounded-md border text-[10px] sm:text-[11px] font-medium shadow-2xs hover:shadow-xs transition-all text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
+                                    >
+                                      <i className="fa-regular fa-file-pdf mr-1 text-[10px]"></i>
+                                      <span>{link.label}</span>
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    /* Fallback Institutional Notices */
+                    curr.hero.notices.map((notice, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3 sm:p-3.5 hover:bg-blue-50/70 transition-colors flex items-start space-x-3 group"
+                      >
+                        <div className="flex-shrink-0 text-center rounded-lg overflow-hidden w-11 shadow-xs border border-slate-200">
+                          <span className="block text-[9px] font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 to-red-700 text-white py-0.5">
+                            {notice.month}
                           </span>
-                          <span className="text-[10px] font-semibold text-slate-500">
-                            {notice.ref}
+                          <span className="block text-sm sm:text-base font-black leading-none py-1 bg-white text-slate-900">
+                            {notice.day}
                           </span>
                         </div>
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-800 mt-0.5 leading-snug">
-                          {notice.title}
-                        </h4>
-                        <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed line-clamp-2">
-                          {notice.desc}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-1.5 mt-1.5 pt-1 border-t border-slate-100 text-[11px] font-semibold">
-                          {notice.links.map((link, lIdx) => (
-                            <a
-                              key={lIdx}
-                              href={link.href}
-                              className={`inline-flex items-center px-2 py-0.5 rounded-md border text-[10px] sm:text-[11px] font-medium shadow-2xs hover:shadow-xs transition-all ${link.color}`}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-1.5 flex-wrap gap-y-0.5">
+                            <span
+                              className={`${notice.badgeColor} text-white text-[9px] font-bold px-1.5 py-0.2 rounded uppercase shadow-2xs`}
                             >
-                              <i className={`${link.icon} mr-1 text-[10px]`}></i>
-                              <span>{link.text}</span>
-                            </a>
-                          ))}
+                              {notice.badge}
+                            </span>
+                            <span className="text-[10px] font-semibold text-slate-500">
+                              {notice.ref}
+                            </span>
+                          </div>
+                          <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-800 mt-0.5 leading-snug">
+                            {notice.title}
+                          </h4>
+                          <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed line-clamp-2">
+                            {notice.desc}
+                          </p>
+                          <div className="flex flex-wrap items-center gap-1.5 mt-1.5 pt-1 border-t border-slate-100 text-[11px] font-semibold">
+                            {notice.links.map((link, lIdx) => (
+                              <a
+                                key={lIdx}
+                                href={link.href}
+                                className={`inline-flex items-center px-2 py-0.5 rounded-md border text-[10px] sm:text-[11px] font-medium shadow-2xs hover:shadow-xs transition-all ${link.color}`}
+                              >
+                                <i className={`${link.icon} mr-1 text-[10px]`}></i>
+                                <span>{link.text}</span>
+                              </a>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
 
                 {/* Footer of Notice Card */}
@@ -1032,6 +1169,13 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Dynamic Public Form Submission Modal */}
+      <DynamicFormModal
+        form={selectedFormForModal}
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+      />
     </div>
   );
 }

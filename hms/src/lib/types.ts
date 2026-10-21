@@ -179,11 +179,94 @@ export interface IAdmissionNotice {
   _id?: string;
   title: string;
   description: string;
-  category: "ADMISSION" | "CIRCULAR" | "BLUEPRINT" | "REBATE";
+  category: "ADMISSION" | "CIRCULAR" | "BLUEPRINT" | "REBATE" | "MAINTENANCE" | "GENERAL";
   refNumber: string;
   publishDate: Date;
-  pdfLinks: { label: string; url: string }[];
+  pdfLinks: { label: string; url: string; isFormLink?: boolean; formId?: string }[];
+  visibility?: FormVisibility;
   isActive: boolean;
+  createdBy?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export type CustomFormFieldType =
+  | "text"
+  | "textarea"
+  | "number"
+  | "checkbox"
+  | "select"
+  | "radio"
+  | "date"
+  | "datetime"
+  | "file"
+  | "email"
+  | "phone";
+
+export type FormType = "ADMISSION" | "REALLOCATION" | "MAINTENANCE" | "NOTICE" | "GENERAL";
+
+export type FormVisibility = "PUBLIC" | "ENROLLED_STUDENTS" | "ALLOTTED_STUDENTS";
+
+export type FormStatus = "DRAFT" | "ACTIVE" | "CLOSED" | "ARCHIVED";
+
+export interface ICustomFormField {
+  id: string;
+  label: string;
+  fieldType: CustomFormFieldType;
+  required: boolean;
+  placeholder?: string;
+  helpText?: string;
+  options?: string[]; // for select, radio
+  order?: number;
+}
+
+export interface ICustomForm {
+  _id?: string;
+  title: string;
+  description: string;
+  formType: FormType;
+  startDate: Date | string;
+  endDate: Date | string;
+  visibility: FormVisibility;
+  status: FormStatus;
+  fields: ICustomFormField[];
+  createdBy?: string;
+  hostelCategory?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export type ResponseStatus = "PENDING" | "UNDER_REVIEW" | "APPROVED" | "REJECTED";
+
+export interface IFormResponseItem {
+  fieldId: string;
+  label: string;
+  value: any;
+  fieldType: CustomFormFieldType | string;
+}
+
+export interface IApplicantInfo {
+  name: string;
+  email: string;
+  phone: string;
+  rollNo?: string;
+  branch?: string;
+  session?: string;
+}
+
+export interface IFormResponse {
+  _id?: string;
+  formId: string;
+  formTitle: string;
+  formType: FormType;
+  submittedBy?: string; // studentId if logged in
+  applicantInfo: IApplicantInfo;
+  responses: IFormResponseItem[];
+  status: ResponseStatus;
+  wardenNotes?: string;
+  reviewedBy?: string;
+  reviewedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
