@@ -17,6 +17,8 @@ export async function GET(req: Request) {
     const status = searchParams.get("status");
     const formId = searchParams.get("formId");
     const search = searchParams.get("search");
+    const startDate = searchParams.get("startDate") || searchParams.get("fromDate");
+    const endDate = searchParams.get("endDate") || searchParams.get("toDate");
 
     const query: any = {};
 
@@ -28,8 +30,22 @@ export async function GET(req: Request) {
       query.status = status.toUpperCase();
     }
 
-    if (formId) {
+    if (formId && formId !== "ALL") {
       query.formId = formId;
+    }
+
+    if (startDate || endDate) {
+      query.createdAt = {};
+      if (startDate) {
+        const from = new Date(startDate);
+        from.setHours(0, 0, 0, 0);
+        query.createdAt.$gte = from;
+      }
+      if (endDate) {
+        const to = new Date(endDate);
+        to.setHours(23, 59, 59, 999);
+        query.createdAt.$lte = to;
+      }
     }
 
     if (search && search.trim()) {
@@ -45,8 +61,36 @@ export async function GET(req: Request) {
 
     const responses = await FormResponse.find(query).sort({ createdAt: -1 }).lean();
 
-    // Calculate count totals by formType for tab badges
+    // Available forms for specific form dropdown
+    const availableForms = await FormResponse.aggregate([
+      {
+        $group: {
+          _id: "$formId",
+          formTitle: { $first: "$formTitle" },
+          formType: { $first: "$formType" },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Calculate count totals by formType for tab badges (considering date range if set)
+    const dateQuery: any = {};
+    if (startDate || endDate) {
+      dateQuery.createdAt = {};
+      if (startDate) {
+        const from = new Date(startDate);
+        from.setHours(0, 0, 0, 0);
+        dateQuery.createdAt.$gte = from;
+      }
+      if (endDate) {
+        const to = new Date(endDate);
+        to.setHours(23, 59, 59, 999);
+        dateQuery.createdAt.$lte = to;
+      }
+    }
+
     const counts = await FormResponse.aggregate([
+      ...(Object.keys(dateQuery).length > 0 ? [{ $match: dateQuery }] : []),
       {
         $group: {
           _id: "$formType",
@@ -72,7 +116,7 @@ export async function GET(req: Request) {
       }
     });
 
-    return NextResponse.json({ responses, tabCounts });
+    return NextResponse.json({ responses, tabCounts, availableForms });
   } catch (err: any) {
     console.error("GET /api/warden/forms/responses error:", err);
     return NextResponse.json({ error: err.message || "Failed to fetch responses" }, { status: 500 });
